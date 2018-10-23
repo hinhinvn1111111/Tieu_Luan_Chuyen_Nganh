@@ -8,6 +8,7 @@
 
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View} from 'react-native';
+
 import MapView from 'react-native-maps';
 
 const instructions = Platform.select({
@@ -17,20 +18,21 @@ const instructions = Platform.select({
     'Shake or press menu button for dev menu',
 });
 
-
-export default class App extends Component {
+export default class App extends Component{
   render() {
     return (
       <View style={styles.container}>
-        <MapView
+        <MapView 
           initialRegion={{
             latitude: 37.7900352,
             longitude: -122.4013726,
             latitudeDelta: 0.0122,
             longitudeDelta:0.009
           }}
-          style={{width:"100%",height:"100%"}}
-        ></MapView>
+          style={{width:200,height:300}}
+        >
+
+        </MapView>
       </View>
     );
   }
