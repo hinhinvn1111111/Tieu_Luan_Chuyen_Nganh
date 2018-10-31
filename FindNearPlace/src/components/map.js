@@ -4,7 +4,8 @@ import {
     Text,
     Image,
     TouchableOpacity,
-    TextInput
+    TextInput,
+    Animated
 } from 'react-native';
 import MapView from 'react-native-maps';
 import {connect} from 'react-redux';
@@ -17,7 +18,8 @@ class Map extends Component {
         this.state = {
             isSearch : false,
             value : '',
-            num : 0
+            num : 0,
+            animated : new Animated.Value(0)
         }
     }
     _renderMarekrs(){
@@ -49,11 +51,23 @@ class Map extends Component {
         this.props.GetDataSearch(value);
         this.setState({value:''});
     }
-    
+    componentDidMount(){
+        Animated.timing(
+            this.state.animated,
+            {
+                toValue : '2',
+                duration : 4000
+            }
+        ).start();
+    }
     IsSearch(){
+        const backgroundColor = this.state.animated.interpolate({
+            inputRange : [0,0.5,1,1.5,2],
+            outputRange : ['yellow','blue','green','lightblue','red']
+        });
         if(this.props.isSearch===true){
             return(
-                <View style={{width:width,height:40,backgroundColor:'#7388C1',justifyContent:'space-between',alignItems:"center",flexDirection:'row',paddingLeft:10,paddingRight:10}}>
+                <Animated.View style={{width:width,height:40,backgroundColor,justifyContent:'space-between',alignItems:"center",flexDirection:'row',paddingLeft:10,paddingRight:10}}>
                     <TouchableOpacity onPress={()=>this.props.ISSearch()}>
                         <Image
                             style={{width:26,height:26,resizeMode:'cover'}}
@@ -67,11 +81,11 @@ class Map extends Component {
                             source={{uri:'https://png.icons8.com/office/2x/search.png'}}
                         />
                     </TouchableOpacity>
-                </View>
+                </Animated.View>
             );
         }
         return (
-            <View style={{width:width,height:40,backgroundColor:'#7388C1',justifyContent:'space-between',alignItems:"center",flexDirection:'row',paddingLeft:10,paddingRight:10}}>
+            <Animated.View style={{width:width,height:40,backgroundColor,justifyContent:'space-between',alignItems:"center",flexDirection:'row',paddingLeft:10,paddingRight:10}}>
                 <TouchableOpacity onPress={()=>this.props.ISSearch()}>
                 <Image
                     style={{width:26,height:26,resizeMode:'cover'}}
@@ -88,7 +102,7 @@ class Map extends Component {
                 />
                 </TouchableOpacity>
                 
-            </View>
+            </Animated.View>
         );
     }
     
