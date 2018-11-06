@@ -5,14 +5,21 @@ import {
     Image,
     TouchableOpacity,
     TextInput,
-    Animated
+    Animated,
+    
 } from 'react-native';
 import MapView from 'react-native-maps';
 import {connect} from 'react-redux';
 import {width,height} from './responsive';
 import {GetDataSearch,MEMORIZED,ISSearch} from '../redux/dispatch';
+import {createStackNavigator} from 'react-navigation';
 
-class Map extends Component {
+import Carousel from 'react-native-snap-carousel';
+
+
+
+
+export class Map extends Component {
     constructor(props){
         super(props);
         this.state = {
@@ -22,6 +29,39 @@ class Map extends Component {
             animated : new Animated.Value(0)
         }
     }
+
+    _renderItem ({item,index}) {
+        
+        return (
+            <View key={index} style={{width:200,height:200,backgroundColor:'blue',margin:10}}>
+                <Image
+                    style={{width:200,height:120}}
+                    source={{uri:item.Image}}
+                />
+                
+                <Text style={{fontSize:12,fontWeight:'bold',color:'#fff',justifyContent:"center",margin:10}}>{item.Title}</Text>
+               
+            </View>
+        );
+    }
+    _renderCasousel(){
+        return(
+            <Carousel 
+                ref={(c) => { this._carousel = c; }}
+                data={this.props.arrLocations}
+                renderItem={this._renderItem}
+                itemWidth={200}
+                sliderWidth={300}
+                enableMomentum={true}
+                activeAnimationType={'spring'}
+                activeAnimationOptions={{
+                        friction: 40,
+                        tension: 40
+                    }}
+            />
+        );
+    }
+
     _renderMarekrs(){
         views  = [];
         for(let i of this.props.arrLocations){
@@ -81,6 +121,7 @@ class Map extends Component {
                             source={{uri:'https://png.icons8.com/office/2x/search.png'}}
                         />
                     </TouchableOpacity>
+                   
                 </Animated.View>
             );
         }
@@ -92,9 +133,11 @@ class Map extends Component {
                     source={{uri:'https://png.icons8.com/office/2x/search.png'}}
                 />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={()=>this.props.ISSearch()}>
-                    <Text style={{color:'#fff'}}>Nhập từ bạn muốn tìm...</Text>
-                </TouchableOpacity>
+                <View style={{flex:1,marginLeft:10}}>
+                    <TouchableOpacity onPress={()=>this.props.ISSearch()}>
+                        <Text style={{color:'#fff'}}>Nhập từ bạn muốn tìm...</Text>
+                    </TouchableOpacity>
+                </View>
                 <TouchableOpacity>
                 <Image
                     style={{width:26,height:26,resizeMode:'cover'}}
@@ -108,7 +151,9 @@ class Map extends Component {
     
     render() {
         return (
-        <View >
+        <View>
+            
+            
             {this.IsSearch()}
             <MapView
             
@@ -118,16 +163,19 @@ class Map extends Component {
                 latitudeDelta: 0.0122,
                 longitudeDelta:0.009
             }}
-            style={{width:"100%",height:"93%"}}
+            style={{width:"100%",height:"53%"}}
             >
-
-            {this._renderMarekrs()}
-            </MapView>
+                {this._renderMarekrs()}
+            </MapView>  
             
-            </View>
+            {this._renderCasousel()}
+            
+        </View>
         );
     }
 }
+
+
 
 function mapStateToProps(state){
     return { 
@@ -136,5 +184,12 @@ function mapStateToProps(state){
     };
 }
 
-export default connect(mapStateToProps,{GetDataSearch,MEMORIZED,ISSearch})(Map)
+export default connect(mapStateToProps,{GetDataSearch,MEMORIZED,ISSearch})(Map);
+
+
+
+
+
+
+
 

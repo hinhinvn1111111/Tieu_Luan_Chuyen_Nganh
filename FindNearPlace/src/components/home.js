@@ -13,6 +13,7 @@ import Profile from './profile';
 StatusBar.setHidden(true);
 import TabNavigator from 'react-native-tab-navigator';
 
+
 export class Home extends Component {
     render(){
         return(
@@ -21,21 +22,6 @@ export class Home extends Component {
     }
 }
 
-// export class Profile extends Component {
-//     render(){
-//         return(
-//             <View style={{flex:1,backgroundColor:'yellow'}} />
-//         )
-//     }
-// }
-
-// export class Setting extends Component {
-//     render(){
-//         return(
-//             <View style={{flex:1,backgroundColor:'lightblue'}} />
-//         )
-//     }
-// }
 
 export default class Main extends Component {
     constructor(props){
@@ -80,7 +66,25 @@ export default class Main extends Component {
                         {<Setting style={{flex:1}}/>}
                     </TabNavigator.Item>
                 </TabNavigator>
-                </View>
+            </View>
         );
     }
 }
+
+// import {createStackNavigator} from 'react-navigation';
+// import A from './request';
+// export default Main = createStackNavigator({
+//     Home : {
+//         screen : Main1
+//     },
+//     MapScrenn : {
+//         screen : Map
+//     },
+//     AScreen : {
+//         screen : A
+//     }
+// })
+
+
+
+

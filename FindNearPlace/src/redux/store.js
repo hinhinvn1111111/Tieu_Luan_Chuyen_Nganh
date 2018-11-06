@@ -1,8 +1,9 @@
 import {createStore,combineReducers} from 'redux';
 import responsive from '../components/responsive';
 
-const defaultArrLocations = []
+const defaultArrLocations = [];
 const isSearch = false;
+
 
 const arrLocationsReducer= (state=defaultArrLocations,action)=>{
     
