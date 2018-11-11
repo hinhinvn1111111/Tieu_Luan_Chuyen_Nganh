@@ -173,7 +173,8 @@ class Map extends Component {
         <View index={this.props.id} style={{flex:1,justifyContent:"center",alignItems:"center"}} key={1}>
             {this.IsSearch()}
             <MapView
-            
+                showsUserLocation={true}
+                followsUserLocation={true}
             initialRegion={{
                 latitude: 10.877129,
                 longitude: 106.766754,
@@ -183,6 +184,7 @@ class Map extends Component {
             style={{width:"100%",height:"50%"}}
             >
                 {this._renderMarekrs()}
+                <View style={{flex:1,backgroundColor:'red'}}></View>
             </MapView>  
             
             {this._renderCasousel()}
