@@ -5,21 +5,19 @@ import {
     Image,
     TouchableOpacity,
     TextInput,
-    Animated,
-    
+    Animated
 } from 'react-native';
 import MapView from 'react-native-maps';
 import {connect} from 'react-redux';
 import {width,height} from './responsive';
-import {GetDataSearch,MEMORIZED,ISSearch} from '../redux/dispatch';
-import {createStackNavigator} from 'react-navigation';
-
+import {GetDataSearch,MEMORIZED,ISSearch,ChangeIDViewMap} from '../redux/dispatch';
 import Carousel from 'react-native-snap-carousel';
 
 
 
 
-export class Map extends Component {
+class Map extends Component {
+    
     constructor(props){
         super(props);
         this.state = {
@@ -29,17 +27,24 @@ export class Map extends Component {
             animated : new Animated.Value(0)
         }
     }
-
+    _goToChiTiet(){
+        return this.props.navigation.push('screen2');
+    }
     _renderItem ({item,index}) {
         
         return (
             <View key={index} style={{width:200,height:200,backgroundColor:'blue',margin:10}}>
-                <Image
-                    style={{width:200,height:120}}
-                    source={{uri:item.Image}}
-                />
+                <TouchableOpacity onPress={()=>{}} >
+                    <Image
+                        style={{width:200,height:120}}
+                        source={{uri:item.Image}}
+                    />
+                </TouchableOpacity>
                 
                 <Text style={{fontSize:12,fontWeight:'bold',color:'#fff',justifyContent:"center",margin:10}}>{item.Title}</Text>
+                <TouchableOpacity onPress={()=>{}}>
+                    <Text style={{fontSize:12,fontWeight:'bold',color:'#fff',justifyContent:"center",margin:10}}>click</Text>
+                </TouchableOpacity>
                
             </View>
         );
@@ -88,19 +93,27 @@ export class Map extends Component {
         return views;
     }
     _sendata(value){
-        this.props.GetDataSearch(value);
-        this.setState({value:''});
+        if(this.state.value===''){
+            alert("Bạn chưa nhập từ tìm kiếm");
+        }else{
+            this.props.GetDataSearch(value);
+            this.setState({value:''});
+            this.props.navigation.push('screen2',{value : this.state.value});
+            this.props.ISSearch();
+            
+        }
     }
-    componentDidMount(){
-        Animated.timing(
-            this.state.animated,
-            {
-                toValue : '2',
-                duration : 4000
-            }
-        ).start();
-    }
+    // componentDidMount(){
+    //     Animated.timing(
+    //         this.state.animated,
+    //         {
+    //             toValue : '2',
+    //             duration : 4000
+    //         }
+    //     ).start();
+    // }
     IsSearch(){
+        
         const backgroundColor = this.state.animated.interpolate({
             inputRange : [0,0.5,1,1.5,2],
             outputRange : ['yellow','blue','green','lightblue','red']
@@ -144,16 +157,20 @@ export class Map extends Component {
                     source={{uri:'https://png.icons8.com/nolan/2x/plus-math.png'}}
                 />
                 </TouchableOpacity>
-                
             </Animated.View>
         );
     }
     
     render() {
+        Animated.timing(
+            this.state.animated,
+            {
+                toValue : '2',
+                duration : 2000
+            }
+        ).start();
         return (
-        <View>
-            
-            
+        <View index={this.props.id} style={{flex:1,justifyContent:"center",alignItems:"center"}} key={1}>
             {this.IsSearch()}
             <MapView
             
@@ -163,7 +180,7 @@ export class Map extends Component {
                 latitudeDelta: 0.0122,
                 longitudeDelta:0.009
             }}
-            style={{width:"100%",height:"53%"}}
+            style={{width:"100%",height:"50%"}}
             >
                 {this._renderMarekrs()}
             </MapView>  
@@ -180,16 +197,9 @@ export class Map extends Component {
 function mapStateToProps(state){
     return { 
         arrLocations : state.arrLocations,
-        isSearch : state.isSearch
+        isSearch : state.isSearch,
+        id : state.changIDViewMap
     };
 }
 
-export default connect(mapStateToProps,{GetDataSearch,MEMORIZED,ISSearch})(Map);
-
-
-
-
-
-
-
-
+export default connect(mapStateToProps,{GetDataSearch,MEMORIZED,ISSearch,ChangeIDViewMap})(Map);

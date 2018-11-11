@@ -3,6 +3,7 @@ import responsive from '../components/responsive';
 
 const defaultArrLocations = [];
 const isSearch = false;
+const idViewMap = 1;
 
 
 const arrLocationsReducer= (state=defaultArrLocations,action)=>{
@@ -38,9 +39,15 @@ const isSearchReducer = (state=isSearch,action)=>{
     return state;
 }
 
+const idViewMapReducer = (state=idViewMap,action)=>{
+    if(action.type==='change') return state=state+1;
+    return state;
+}
+
 const reducer = combineReducers({
     arrLocations : arrLocationsReducer,
-    isSearch : isSearchReducer
+    isSearch : isSearchReducer,
+    changIDViewMap :idViewMapReducer
 })
 
 export default store  = createStore(reducer);

@@ -1,166 +1,64 @@
-// import React, { Component } from 'react';
-// import { 
-//     View,
-//     Text,
-//     Animated,
-//     TouchableOpacity,
-//     Image,
-//     TextInput
-// } from 'react-native';
+import React, {Component} from 'react';
+import {
+    View,
+    Text,
+    Image,
+    TouchableOpacity,
+    TextInput,
+    Animated,
+    Dimensions
+} from 'react-native';
+import MapView from 'react-native-maps';
+import {connect} from 'react-redux';
+import {ChangeIDViewMap} from '../redux/dispatch';
+import Carousel from 'react-native-snap-carousel';
 
-// import {connect} from 'react-redux';
+const {w,h}  = Dimensions.get('window');
 
-// import {GetDataSearch,MEMORIZED,ISSearch} from '../redux/dispatch';
+class Search extends Component {
+    constructor(props){
+        super(props);
+        this.state = {
 
-// import {createStackNavigator} from 'react-navigation';
+        }
+    }
+    _goToMap(){
+        this.props.ChangeIDViewMap();
+        this.props.navigation.navigate('screen1');
+    }
+    render() {
+        
+        return (
+            <View style={{flex:1}}>
+                <View style={{elevation:10,padding:10,width:w,height:h/5,backgroundColor:'#fff',borderRadius:5,margin:10}}>
+                    <Text style={{}}>{this.props.navigation.state.params.value}</Text>
+                </View>
+                <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
+                    <View style={{marginTop:20,marginLeft:10,marginRight:10,flexDirection:'row',justifyContent:'space-between',alignItems:'center',elevation:10,borderWidth:1,backgroundColor:'gray'}}>
+                        <Text style={{fontWeight:'bold',margin:10}}>Vị trí</Text>
+                        
+                        <TextInput style={{flex:1,padding:10,height:40,margin:10,backgroundColor:'#fff',borderRadius:5,borderColor:'black',elevation:2}}/>
+                    </View>
+                    <View style={{marginTop:50,marginLeft:10,marginRight:10,flexDirection:'row',justifyContent:'space-between',alignItems:'center',elevation:10,borderWidth:1,backgroundColor:'gray'}}>
+                        <Text style={{fontWeight:'bold',margin:10}}>Bán kính</Text>
+                        
+                        <TextInput style={{flex:1,padding:10,height:40,margin:10,backgroundColor:'#fff',borderRadius:5,borderColor:'black',elevation:2}}/>
+                    </View>
+                    <TouchableOpacity onPress={this._goToMap.bind(this)}>
+                        <Text style={{width:100,height:40,backgroundColor:'green',textAlign:'center',alignContent:'center',padding:10,marginTop:100}}>Tìm kiếm</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+        );
+    }
+}
 
-// class Search extends Component {
-//     constructor(props){
-//         super(props);
-//         this.state = {
-//             isSearch : false,
-//             value : '',
-//             num : 0,
-//             animated : new Animated.Value(0)
-//         }
-//     }
+function mapStateToProps(state){
+    return { 
+        arrLocations : state.arrLocations,
+        isSearch : state.isSearch,
+        id : state.changIDViewMap
+    };
+}
 
-//     componentDidMount(){
-//         Animated.timing(
-//             this.state.animated,
-//             {
-//                 toValue : '2',
-//                 duration : 4000
-//             }
-//         ).start();
-//     }
-
-
-//     _sendata(value){
-//         this.props.GetDataSearch(value);
-//         this.setState({value:''});
-//     }
-
-//     IsSearch(){
-//         const backgroundColor = this.state.animated.interpolate({
-//             inputRange : [0,0.5,1,1.5,2],
-//             outputRange : ['yellow','blue','green','lightblue','red']
-//         });
-//         if(this.props.isSearch===true){
-//             return(
-//                 <Animated.View style={{width:width,height:40,backgroundColor,justifyContent:'space-between',alignItems:"center",flexDirection:'row',paddingLeft:10,paddingRight:10}}>
-//                     <TouchableOpacity onPress={()=>this.props.ISSearch()}>
-//                         <Image
-//                             style={{width:26,height:26,resizeMode:'cover'}}
-//                             source={require('../Image/icons8-back-24.png')}
-//                         />
-//                     </TouchableOpacity>
-//                     <View style={{height:30,backgroundColor:'#fff',flex:1,marginLeft:10,marginRight:10}}><TextInput autoFocus={true} style={{fontSize:12,paddingTop:5,paddingLeft:10,paddingBottom:5}} onChangeText={(vl)=>this.setState({value:vl})} placeholder="Nhập từ bạn muốn tìm..." value={this.state.value}/></View>
-//                     <TouchableOpacity onPress={()=>this._sendata(this.state.value)}>
-//                         <Image
-//                             style={{width:26,height:26,resizeMode:'cover'}}
-//                             source={{uri:'https://png.icons8.com/office/2x/search.png'}}
-//                         />
-//                     </TouchableOpacity>
-//                 </Animated.View>
-//             );
-//         }
-//         return (
-//             <Animated.View style={{width:width,height:40,backgroundColor,justifyContent:'space-between',alignItems:"center",flexDirection:'row',paddingLeft:10,paddingRight:10}}>
-//                 <TouchableOpacity onPress={()=>this.props.ISSearch()}>
-//                 <Image
-//                     style={{width:26,height:26,resizeMode:'cover'}}
-//                     source={{uri:'https://png.icons8.com/office/2x/search.png'}}
-//                 />
-//                 </TouchableOpacity>
-//                 <TouchableOpacity onPress={()=>this.props.ISSearch()}>
-//                     <Text style={{color:'#fff'}}>Nhập từ bạn muốn tìm...</Text>
-//                 </TouchableOpacity>
-//                 <TouchableOpacity>
-//                 <Image
-//                     style={{width:26,height:26,resizeMode:'cover'}}
-//                     source={{uri:'https://png.icons8.com/nolan/2x/plus-math.png'}}
-//                 />
-//                 </TouchableOpacity>
-                
-//             </Animated.View>
-//         );
-//     }
-//     render() {
-//         // return (
-//         //     <View>
-//         //         {this.IsSearch()}
-//         //     </View>
-//         // );
-//         const backgroundColor = this.state.animated.interpolate({
-//             inputRange : [0,0.5,1,1.5,2],
-//             outputRange : ['yellow','blue','green','lightblue','red']
-//         });
-//         if(this.props.isSearch===true){
-//             return(
-//                 <Animated.View style={{width:width,height:40,backgroundColor,justifyContent:'space-between',alignItems:"center",flexDirection:'row',paddingLeft:10,paddingRight:10}}>
-//                     <TouchableOpacity onPress={()=>this.props.ISSearch()}>
-//                         <Image
-//                             style={{width:26,height:26,resizeMode:'cover'}}
-//                             source={require('../Image/icons8-back-24.png')}
-//                         />
-//                     </TouchableOpacity>
-//                     <View style={{height:30,backgroundColor:'#fff',flex:1,marginLeft:10,marginRight:10}}><TextInput autoFocus={true} style={{fontSize:12,paddingTop:5,paddingLeft:10,paddingBottom:5}} onChangeText={(vl)=>this.setState({value:vl})} placeholder="Nhập từ bạn muốn tìm..." value={this.state.value}/></View>
-//                     <TouchableOpacity onPress={()=>this._sendata(this.state.value)}>
-//                         <Image
-//                             style={{width:26,height:26,resizeMode:'cover'}}
-//                             source={{uri:'https://png.icons8.com/office/2x/search.png'}}
-//                         />
-//                     </TouchableOpacity>
-//                 </Animated.View>
-//             );
-//         }
-//         return (
-//             <View>
-//                 <Animated.View style={{width:width,height:40,backgroundColor,justifyContent:'space-between',alignItems:"center",flexDirection:'row',paddingLeft:10,paddingRight:10}}>
-//                     <TouchableOpacity onPress={()=>this.props.ISSearch()}>
-//                     <Image
-//                         style={{width:26,height:26,resizeMode:'cover'}}
-//                         source={{uri:'https://png.icons8.com/office/2x/search.png'}}
-//                     />
-//                     </TouchableOpacity>
-//                     <TouchableOpacity onPress={()=>this.props.ISSearch()}>
-//                         <Text style={{color:'#fff'}}>Nhập từ bạn muốn tìm...</Text>
-//                     </TouchableOpacity>
-//                     <TouchableOpacity>
-//                     <Image
-//                         style={{width:26,height:26,resizeMode:'cover'}}
-//                         source={{uri:'https://png.icons8.com/nolan/2x/plus-math.png'}}
-//                     />
-//                     </TouchableOpacity>
-//                     <TouchableOpacity onPress={()=>this.props.navigation.navigate('a1')}>
-//                         <Text>aaaaa</Text>
-//                     </TouchableOpacity>
-//                 </Animated.View>
-//             </View>
-//         );
-//     }
-// }
-
-// function mapStateToProps(state){
-//     return { 
-//         arrLocations : state.arrLocations,
-//         isSearch : state.isSearch
-//     };
-// };
-
-// connect(mapStateToProps,{GetDataSearch,MEMORIZED,ISSearch})(Search);
-
-// import A from './request';
-
-// export default Search1 = createStackNavigator({
-//     Search : {
-//         screen : Search,
-//         navigationOptions : {
-//             header : null
-//         }
-//     },
-//     a1 : {
-//         screen : A
-//     }
-// })
+export default connect(mapStateToProps,{ChangeIDViewMap})(Search);

@@ -18,3 +18,9 @@ export function ISSearch(){
         type : 'isSearch',
     }
 }
+
+export function ChangeIDViewMap(){
+    return{
+        type : 'change'
+    }
+}
