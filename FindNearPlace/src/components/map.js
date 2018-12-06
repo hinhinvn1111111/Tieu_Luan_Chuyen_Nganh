@@ -12,10 +12,25 @@ import {connect} from 'react-redux';
 import {width,height} from './responsive';
 import {GetDataSearch,MEMORIZED,ISSearch,ChangeIDViewMap} from '../redux/dispatch';
 import Carousel from 'react-native-snap-carousel';
+import MapViewDirections from 'react-native-maps-directions';
+const origin = {latitude: 37.3318456, longitude: -122.0296002};
+const destination = {latitude: 37.771707, longitude: -122.4053769};
+const GOOGLE_MAPS_APIKEY = 'AIzaSyAUbpIeR5QgtwjHBFgFEr4A-9peuD_NyjU';
 
-
-
-
+const a = ()=>{
+    <MapViewDirections
+        origin={{
+        latitude:10.877640,
+        longitude:106.766193
+        }}
+        destination={{
+        latitude:10.871497,
+        longitude:106.764358
+        }}
+        apikey={GOOGLE_MAPS_APIKEY}
+        strokeWidth={3}
+        strokeColor="pink"
+    />};
 class Map extends Component {
     
     constructor(props){
@@ -24,16 +39,27 @@ class Map extends Component {
             isSearch : false,
             value : '',
             num : 0,
-            animated : new Animated.Value(0)
+            animated : new Animated.Value(0),
+            isChiDuog : false,
+            lat:0,
+            long:0
         }
     }
+    
     _goToChiTiet(){
         return this.props.navigation.push('screen2');
+    }
+
+    _ChiDuong(){
+        alert(this.state.lat);
+    }
+    t(vl){
+        this.props.navigation.push('screen2',{value : vl});
     }
     _renderItem ({item,index}) {
         
         return (
-            <View key={index} style={{width:200,height:200,backgroundColor:'blue',margin:10}}>
+            <View key={index} style={{width:200,height:200,backgroundColor:'blue',margin:10,alignItems:"center"}}>
                 <TouchableOpacity onPress={()=>{}} >
                     <Image
                         style={{width:200,height:120}}
@@ -42,8 +68,8 @@ class Map extends Component {
                 </TouchableOpacity>
                 
                 <Text style={{fontSize:12,fontWeight:'bold',color:'#fff',justifyContent:"center",margin:10}}>{item.Title}</Text>
-                <TouchableOpacity onPress={()=>{}}>
-                    <Text style={{fontSize:12,fontWeight:'bold',color:'#fff',justifyContent:"center",margin:10}}>click</Text>
+                <TouchableOpacity onPress={()=>this._sendata("bbbbbbbbbbbbbb")}>
+                    <Text style={{fontSize:12,fontWeight:'bold',color:'#fff',justifyContent:"center",margin:10,alignItems:'center'}}>Chỉ đường</Text>
                 </TouchableOpacity>
                
             </View>
@@ -79,12 +105,13 @@ class Map extends Component {
                             longitude:parseFloat(i.Longtitude)
                         }}
                     >
+                    
                         <MapView.Callout style={{width:200,height:200}}>
                             <View style={{flex:1,alignItems:'center'}}>
                                 <Image style={{width:250, height:100, resizeMode:'cover',marginTop:10}}
                                     source={{uri:i.Image}} />
                                 <Text style={{fontSize:18, fontWeight:'bold',color:'red', marginTop:10}}>{i.Title}</Text>
-                                <Text style={{fontSize:12,color:'blue', marginTop:10}}>{i.Decription}</Text>
+                                <Text style={{fontSize:12,color:'blue', marginTop:10}}>{i.Decription}</Text>                               
                             </View>
                         </MapView.Callout>
                     </MapView.Marker>
@@ -160,8 +187,40 @@ class Map extends Component {
             </Animated.View>
         );
     }
+
+    
+    // componentDidMount(){
+    //     navigator.geolocation.getCurrentPosition(
+    //       (position) => {
+    //           const lat =position.coords.latitude;
+    //           const long = position.coords.longitude;
+    //           this.setState({lat,long})
+    //           alert(lat + "       " + long)
+    //       },
+    //       (error) => alert(error.message),
+    //       { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+    //     )
+    // }
     
     render() {
+        var renderitem=({item,index})=>{
+            return (
+                <View key={index} style={{width:200,height:200,backgroundColor:'blue',margin:10,alignItems:"center"}}>
+                    <TouchableOpacity onPress={()=>{}} >
+                        <Image
+                            style={{width:200,height:120}}
+                            source={{uri:item.Image}}
+                        />
+                    </TouchableOpacity>
+                    
+                    <Text style={{fontSize:12,fontWeight:'bold',color:'#fff',justifyContent:"center",margin:10}}>{item.Title}</Text>
+                    <TouchableOpacity onPress={()=>this._ChiDuong()}>
+                        <Text style={{fontSize:12,fontWeight:'bold',color:'#fff',justifyContent:"center",margin:10,alignItems:'center'}}>Chỉ đường</Text>
+                    </TouchableOpacity>
+                   
+                </View>
+            );
+        }
         Animated.timing(
             this.state.animated,
             {
@@ -184,10 +243,23 @@ class Map extends Component {
             style={{width:"100%",height:"50%"}}
             >
                 {this._renderMarekrs()}
-                <View style={{flex:1,backgroundColor:'red'}}></View>
+                
             </MapView>  
             
-            {this._renderCasousel()}
+            {/* {this._renderCasousel()} */}
+            <Carousel 
+                ref={(c) => { this._carousel = c; }}
+                data={this.props.arrLocations}
+                renderItem={renderitem}
+                itemWidth={200}
+                sliderWidth={300}
+                enableMomentum={true}
+                activeAnimationType={'spring'}
+                activeAnimationOptions={{
+                        friction: 40,
+                        tension: 40
+                    }}
+            />
             
         </View>
         );
