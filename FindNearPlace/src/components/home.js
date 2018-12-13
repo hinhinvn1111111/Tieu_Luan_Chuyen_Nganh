@@ -14,6 +14,7 @@ StatusBar.setHidden(true);
 import TabNavigator from 'react-native-tab-navigator';
 import Search from './search';
 import ListPlaceSearch from './listPlaceSearch';
+import ChiTietPlace from './chitietPlace';
 
 export class Home extends Component {
     render(){
@@ -135,6 +136,10 @@ const Map1 =  createStackNavigator({
     },
     screen3 : {
         screen : ListPlaceSearch
+    },
+    chitietPlace : {
+        screen : ChiTietPlace
     }
+
 })
 

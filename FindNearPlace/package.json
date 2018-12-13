@@ -13,6 +13,7 @@
     "react-native-maps-directions": "^1.6.0",
     "react-native-snap-carousel": "^3.7.5",
     "react-native-tab-navigator": "^0.3.4",
+    "react-native-wheel-picker": "^1.2.0",
     "react-navigation": "^2.18.2",
     "react-redux": "^5.0.7",
     "redux": "^4.0.1"

@@ -24,3 +24,15 @@ export function ChangeIDViewMap(){
         type : 'change'
     }
 }
+
+export function chageHeightMap(){
+    return{
+        type : 'chageHeightMap'
+    }
+}
+
+export function chageHeightMap1(){
+    return{
+        type : 'chageHeightMap1'
+    }
+}

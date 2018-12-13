@@ -4,13 +4,14 @@ import responsive from '../components/responsive';
 const defaultArrLocations = [];
 const isSearch = false;
 const idViewMap = 1;
+const heightMap = "93%";
 
 
 const arrLocationsReducer= (state=defaultArrLocations,action)=>{
     
     if(action.type==='getDataSearch'){
         arrLocations=[];
-        fetch('http://192.168.40.2:8888/Tieu_Luan_Chuyen_Nganh/Server/getDataSearch.php',{
+        fetch('http://192.168.40.2:8888/Tieu_Luan_Chuyen_Nganh/Server/getPlaceFromProduce.php',{
             method:'POST',
             body:JSON.stringify({
                 keySearch : action.value,
@@ -44,10 +45,17 @@ const idViewMapReducer = (state=idViewMap,action)=>{
     return state;
 }
 
+const chageHeightMap = (state=heightMap,action)=>{
+    if(action.type==='chageHeightMap') return state="50%";
+    if(action.type==='chageHeightMap1') return state="93%";
+    return state;
+}
+
 const reducer = combineReducers({
     arrLocations : arrLocationsReducer,
     isSearch : isSearchReducer,
-    changIDViewMap :idViewMapReducer
+    changIDViewMap :idViewMapReducer,
+    heightMap : chageHeightMap
 })
 
 export default store  = createStore(reducer);

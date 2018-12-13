@@ -5,7 +5,8 @@ import {
     Image,
     TouchableOpacity,
     TextInput,
-    Animated
+    Animated,
+
 } from 'react-native';
 import MapView from 'react-native-maps';
 import {connect} from 'react-redux';
@@ -17,20 +18,7 @@ const origin = {latitude: 37.3318456, longitude: -122.0296002};
 const destination = {latitude: 37.771707, longitude: -122.4053769};
 const GOOGLE_MAPS_APIKEY = 'AIzaSyAUbpIeR5QgtwjHBFgFEr4A-9peuD_NyjU';
 
-const a = ()=>{
-    <MapViewDirections
-        origin={{
-        latitude:10.877640,
-        longitude:106.766193
-        }}
-        destination={{
-        latitude:10.871497,
-        longitude:106.764358
-        }}
-        apikey={GOOGLE_MAPS_APIKEY}
-        strokeWidth={3}
-        strokeColor="pink"
-    />};
+
 class Map extends Component {
     
     constructor(props){
@@ -45,54 +33,6 @@ class Map extends Component {
             long:0
         }
     }
-    
-    _goToChiTiet(){
-        return this.props.navigation.push('screen2');
-    }
-
-    _ChiDuong(){
-        alert(this.state.lat);
-    }
-    t(vl){
-        this.props.navigation.push('screen2',{value : vl});
-    }
-    _renderItem ({item,index}) {
-        
-        return (
-            <View key={index} style={{width:200,height:200,backgroundColor:'blue',margin:10,alignItems:"center"}}>
-                <TouchableOpacity onPress={()=>{}} >
-                    <Image
-                        style={{width:200,height:120}}
-                        source={{uri:item.Image}}
-                    />
-                </TouchableOpacity>
-                
-                <Text style={{fontSize:12,fontWeight:'bold',color:'#fff',justifyContent:"center",margin:10}}>{item.Title}</Text>
-                <TouchableOpacity onPress={()=>this._sendata("bbbbbbbbbbbbbb")}>
-                    <Text style={{fontSize:12,fontWeight:'bold',color:'#fff',justifyContent:"center",margin:10,alignItems:'center'}}>Chỉ đường</Text>
-                </TouchableOpacity>
-               
-            </View>
-        );
-    }
-    _renderCasousel(){
-        return(
-            <Carousel 
-                ref={(c) => { this._carousel = c; }}
-                data={this.props.arrLocations}
-                renderItem={this._renderItem}
-                itemWidth={200}
-                sliderWidth={300}
-                enableMomentum={true}
-                activeAnimationType={'spring'}
-                activeAnimationOptions={{
-                        friction: 40,
-                        tension: 40
-                    }}
-            />
-        );
-    }
-
     _renderMarekrs(){
         views  = [];
         for(let i of this.props.arrLocations){
@@ -110,8 +50,8 @@ class Map extends Component {
                             <View style={{flex:1,alignItems:'center'}}>
                                 <Image style={{width:250, height:100, resizeMode:'cover',marginTop:10}}
                                     source={{uri:i.Image}} />
-                                <Text style={{fontSize:18, fontWeight:'bold',color:'red', marginTop:10}}>{i.Title}</Text>
-                                <Text style={{fontSize:12,color:'blue', marginTop:10}}>{i.Decription}</Text>                               
+                                <Text style={{fontSize:15, fontWeight:'bold',color:'red', marginTop:10}}>{i.Title}</Text>
+                                <Text style={{fontSize:8,color:'blue', marginTop:10}}>{i.Decription}</Text>                               
                             </View>
                         </MapView.Callout>
                     </MapView.Marker>
@@ -130,15 +70,10 @@ class Map extends Component {
             
         }
     }
-    // componentDidMount(){
-    //     Animated.timing(
-    //         this.state.animated,
-    //         {
-    //             toValue : '2',
-    //             duration : 4000
-    //         }
-    //     ).start();
-    // }
+    
+    componentDidMount(){
+        this.props.arrLocations.length===0 ? this.setState({height:"93%"}) : this.setState({height:"50%"});
+    }
     IsSearch(){
         
         const backgroundColor = this.state.animated.interpolate({
@@ -203,6 +138,7 @@ class Map extends Component {
     // }
     
     render() {
+        
         var renderitem=({item,index})=>{
             return (
                 <View key={index} style={{width:200,height:200,backgroundColor:'blue',margin:10,alignItems:"center"}}>
@@ -214,8 +150,8 @@ class Map extends Component {
                     </TouchableOpacity>
                     
                     <Text style={{fontSize:12,fontWeight:'bold',color:'#fff',justifyContent:"center",margin:10}}>{item.Title}</Text>
-                    <TouchableOpacity onPress={()=>this._ChiDuong()}>
-                        <Text style={{fontSize:12,fontWeight:'bold',color:'#fff',justifyContent:"center",margin:10,alignItems:'center'}}>Chỉ đường</Text>
+                    <TouchableOpacity onPress={()=>this.props.navigation.navigate("chitietPlace",{item})}>
+                        <Text style={{fontSize:12,fontWeight:'bold',color:'#fff',justifyContent:"center",margin:10,alignItems:'center'}}>Chi tiết</Text>
                     </TouchableOpacity>
                    
                 </View>
@@ -240,7 +176,7 @@ class Map extends Component {
                 latitudeDelta: 0.0122,
                 longitudeDelta:0.009
             }}
-            style={{width:"100%",height:"50%"}}
+            style={{width:"100%",height:this.props.he}}
             >
                 {this._renderMarekrs()}
                 
@@ -272,7 +208,8 @@ function mapStateToProps(state){
     return { 
         arrLocations : state.arrLocations,
         isSearch : state.isSearch,
-        id : state.changIDViewMap
+        id : state.changIDViewMap,
+        he : state.heightMap
     };
 }
 
