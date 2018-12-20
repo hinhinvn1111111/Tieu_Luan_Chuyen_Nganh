@@ -138,7 +138,10 @@ const Map1 =  createStackNavigator({
         screen : ListPlaceSearch
     },
     chitietPlace : {
-        screen : ChiTietPlace
+        screen : ChiTietPlace,
+        navigationOptions : {
+            header : null
+        }
     }
 
 })

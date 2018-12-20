@@ -6,20 +6,29 @@ import {
     TouchableOpacity,
     TextInput,
     Animated,
-
+    YellowBox,
+    Dimensions
 } from 'react-native';
 import MapView from 'react-native-maps';
 import {connect} from 'react-redux';
-import {width,height} from './responsive';
-import {GetDataSearch,MEMORIZED,ISSearch,ChangeIDViewMap} from '../redux/dispatch';
+
+import {GetDataSearch,MEMORIZED,ISSearch,ChangeIDViewMap,DeleteLocationFromDistance} from '../redux/dispatch';
 import Carousel from 'react-native-snap-carousel';
 import MapViewDirections from 'react-native-maps-directions';
+import {arr} from './search';
 const origin = {latitude: 37.3318456, longitude: -122.0296002};
 const destination = {latitude: 37.771707, longitude: -122.4053769};
 const GOOGLE_MAPS_APIKEY = 'AIzaSyAUbpIeR5QgtwjHBFgFEr4A-9peuD_NyjU';
 
+YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
+YellowBox.ignoreWarnings([
+  'Warning: componentWillMount is deprecated',
+  'Warning: componentWillReceiveProps is deprecated',
+]);
 
-class Map extends Component {
+const {width,height}  = Dimensions.get('window');
+
+class Map extends React.Component {
     
     constructor(props){
         super(props);
@@ -28,52 +37,61 @@ class Map extends Component {
             value : '',
             num : 0,
             animated : new Animated.Value(0),
-            isChiDuog : false,
             lat:0,
             long:0
         }
     }
     _renderMarekrs(){
-        views  = [];
-        for(let i of this.props.arrLocations){
+        
+        try {
             
-            views.push(
-                <MapView.Marker
-                        key={parseFloat(i.Latitude)}
-                        coordinate={{
-                            latitude:parseFloat(i.Latitude),
-                            longitude:parseFloat(i.Longtitude)
-                        }}
-                    >
-                    
-                        <MapView.Callout style={{width:200,height:200}}>
-                            <View style={{flex:1,alignItems:'center'}}>
-                                <Image style={{width:250, height:100, resizeMode:'cover',marginTop:10}}
-                                    source={{uri:i.Image}} />
-                                <Text style={{fontSize:15, fontWeight:'bold',color:'red', marginTop:10}}>{i.Title}</Text>
-                                <Text style={{fontSize:8,color:'blue', marginTop:10}}>{i.Decription}</Text>                               
-                            </View>
-                        </MapView.Callout>
-                    </MapView.Marker>
-            )
+            views  = [];
+            for(let i of this.props.ListKC){
+                
+                views.push(
+                    <MapView.Marker
+                            //tracksViewChanges={this.state.tracksViewChanges}
+                            key={parseFloat(i.place.Latitude)}
+                            coordinate={{
+                                latitude:parseFloat(i.place.Latitude),
+                                longitude:parseFloat(i.place.Longtitude)
+                            }}
+                            
+                        >
+                            
+                            <MapView.Callout  style={{width:200,height:200}}>
+                                <View style={{flex:1,alignItems:'center'}}>
+                                    <Image style={{width:250, height:100, resizeMode:'cover',marginTop:10}}
+                                        source={{uri:i.place.Image}} />
+                                    <Text style={{fontSize:15, fontWeight:'bold',color:'red', marginTop:10}}>{i.place.Title}</Text>
+                                    <Text style={{fontSize:8,color:'blue', marginTop:10}}>{i.place.Decription}</Text>                               
+                                </View>
+                            </MapView.Callout>
+                        </MapView.Marker>
+                )
+            }
+            return views;
+        } catch (error) {
+            alert(error);
         }
-        return views;
     }
     _sendata(value){
-        if(this.state.value===''){
-            alert("Bạn chưa nhập từ tìm kiếm");
-        }else{
-            this.props.GetDataSearch(value);
-            this.setState({value:''});
-            this.props.navigation.push('screen2',{value : this.state.value});
-            this.props.ISSearch();
+        try {
             
+            if(this.state.value===''){
+                alert("Bạn chưa nhập từ tìm kiếm");
+            }else{
+                this.props.GetDataSearch(value);
+                this.setState({value:''});
+                this.props.navigation.push('screen2',{value : this.state.value});
+                this.props.ISSearch();
+                
+            }
+        } catch (error) {
+            alert(error);
         }
     }
     
-    componentDidMount(){
-        this.props.arrLocations.length===0 ? this.setState({height:"93%"}) : this.setState({height:"50%"});
-    }
     IsSearch(){
         
         const backgroundColor = this.state.animated.interpolate({
@@ -123,35 +141,36 @@ class Map extends Component {
         );
     }
 
-    
-    // componentDidMount(){
-    //     navigator.geolocation.getCurrentPosition(
-    //       (position) => {
-    //           const lat =position.coords.latitude;
-    //           const long = position.coords.longitude;
-    //           this.setState({lat,long})
-    //           alert(lat + "       " + long)
-    //       },
-    //       (error) => alert(error.message),
-    //       { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
-    //     )
-    // }
+
+    componentWillMount(){
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+              const lat =position.coords.latitude;
+              const long = position.coords.longitude;
+              this.setState({lat,long})
+              //alert(lat + "       " + long)
+          },
+          (error) => alert(error.message),
+          { enableHighAccuracy: true, timeout: 200000, maximumAge: 1000 }
+        )
+    }
     
     render() {
         
         var renderitem=({item,index})=>{
             return (
-                <View key={index} style={{width:200,height:200,backgroundColor:'blue',margin:10,alignItems:"center"}}>
-                    <TouchableOpacity onPress={()=>{}} >
+                <View key={index} style={{zIndex:10,position:'absolute',width:180,height:120,backgroundColor:'blue',margin:10,alignItems:"center"}}>
+                    <TouchableOpacity onPress={()=>this.props.navigation.navigate("chitietPlace",{item:item.place})} >
                         <Image
-                            style={{width:200,height:120}}
-                            source={{uri:item.Image}}
+                            style={{width:180,height:80}}
+                            source={{uri:item.place.Image}}
                         />
-                    </TouchableOpacity>
                     
-                    <Text style={{fontSize:12,fontWeight:'bold',color:'#fff',justifyContent:"center",margin:10}}>{item.Title}</Text>
-                    <TouchableOpacity onPress={()=>this.props.navigation.navigate("chitietPlace",{item})}>
-                        <Text style={{fontSize:12,fontWeight:'bold',color:'#fff',justifyContent:"center",margin:10,alignItems:'center'}}>Chi tiết</Text>
+                    
+                    <Text style={{textAlign:'center',fontSize:12,fontWeight:'bold',color:'#fff'}}>{item.place.Title}</Text>
+                   
+                    <Text style={{textAlign:'center',fontSize:12,fontWeight:'bold',color:'red'}}>{item.kc +  " km"}</Text>
+
                     </TouchableOpacity>
                    
                 </View>
@@ -165,37 +184,47 @@ class Map extends Component {
             }
         ).start();
         return (
-        <View index={this.props.id} style={{flex:1,justifyContent:"center",alignItems:"center"}} key={1}>
+        <View index={this.props.id} style={{flex:1}} key={1}>
             {this.IsSearch()}
             <MapView
                 showsUserLocation={true}
                 followsUserLocation={true}
             initialRegion={{
-                latitude: 10.877129,
-                longitude: 106.766754,
+                latitude: 10.877030,
+                longitude: 106.767133,
                 latitudeDelta: 0.0122,
                 longitudeDelta:0.009
             }}
-            style={{width:"100%",height:this.props.he}}
+            style={{width:"100%",height:"93%"}}
             >
+                <MapView.Circle 
+                    center={{latitude:this.state.lat,longitude:this.state.long}}
+                    radius={parseFloat(this.props.bk) * 1000}
+                    strokeWidth={1}
+                    fillColor="rgba(255,0,0,0.1)"
+                />
                 {this._renderMarekrs()}
                 
             </MapView>  
             
-            {/* {this._renderCasousel()} */}
-            <Carousel 
-                ref={(c) => { this._carousel = c; }}
-                data={this.props.arrLocations}
-                renderItem={renderitem}
-                itemWidth={200}
-                sliderWidth={300}
-                enableMomentum={true}
-                activeAnimationType={'spring'}
-                activeAnimationOptions={{
-                        friction: 40,
-                        tension: 40
-                    }}
-            />
+            <View style={{height:300,position:'absolute',zIndex:10,marginTop:430}}>
+                <Carousel 
+                    
+                    style={{backgroundColor:'blue',margin:10,position:'absolute',zIndex:10}}
+                    ref={(c) => { this._carousel = c; }}
+                    data={this.props.ListKC}
+                    renderItem={renderitem}
+                    itemWidth={200}
+                    sliderWidth={width}
+                    enableMomentum={true}
+                    activeAnimationType={'spring'}
+                    activeAnimationOptions={{
+                            friction: 40,
+                            tension: 40
+                        }}
+                />
+            </View>
+            
             
         </View>
         );
@@ -208,9 +237,10 @@ function mapStateToProps(state){
     return { 
         arrLocations : state.arrLocations,
         isSearch : state.isSearch,
-        id : state.changIDViewMap,
-        he : state.heightMap
+        id : state.changIDViewMa,
+        ListKC : state.ListKC,
+        bk : state.bk
     };
 }
 
-export default connect(mapStateToProps,{GetDataSearch,MEMORIZED,ISSearch,ChangeIDViewMap})(Map);
+export default connect(mapStateToProps,{GetDataSearch,MEMORIZED,ISSearch,ChangeIDViewMap,DeleteLocationFromDistance})(Map);

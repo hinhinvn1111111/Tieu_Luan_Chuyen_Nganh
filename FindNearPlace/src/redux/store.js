@@ -3,30 +3,36 @@ import responsive from '../components/responsive';
 
 const defaultArrLocations = [];
 const isSearch = false;
-const idViewMap = 1;
+const idViewMap = 0;
 const heightMap = "93%";
+const arrKhoangCach = [];
+const bk = 0.0;
 
 
 const arrLocationsReducer= (state=defaultArrLocations,action)=>{
     
     if(action.type==='getDataSearch'){
         arrLocations=[];
-        fetch('http://192.168.40.2:8888/Tieu_Luan_Chuyen_Nganh/Server/getPlaceFromProduce.php',{
+        try{
+            fetch('http://192.168.40.2:8888/Tieu_Luan_Chuyen_Nganh/Server/getPlaceFromProduce.php',{
             method:'POST',
             body:JSON.stringify({
                 keySearch : action.value,
                 
             })
-        })
-        .then((response)=>response.json())
-        .then((responsiveJSON)=>{
-            for(let i of responsiveJSON){
-                arrLocations.push(i);
-            }
-        })
-        .catch((e)=>{
-            alert(e);
-        })
+            })
+            .then((response)=>response.json())
+            .then((responsiveJSON)=>{
+                for(let i of responsiveJSON){
+                    arrLocations.push(i);
+                }
+            })
+            .catch((e)=>{
+                alert(e);
+            })
+        }catch{
+
+        }
         return arrLocations;
         
     }
@@ -46,8 +52,23 @@ const idViewMapReducer = (state=idViewMap,action)=>{
 }
 
 const chageHeightMap = (state=heightMap,action)=>{
-    if(action.type==='chageHeightMap') return state="50%";
+    if(action.type==='chageHeightMap') return state="93%";
     if(action.type==='chageHeightMap1') return state="93%";
+    return state;
+}
+
+const GetArrKhoangCach = (state=arrKhoangCach,action)=>{
+    if(action.type==='push') {
+        state.push({place:action.value,kc:action.t});
+    }
+    if(action.type==='delete') {
+        return state = [];
+    }  
+    return state;
+}
+
+const chageBK = (state=bk,action)=>{
+    if(action.type==='chageBK') return state=action.value;
     return state;
 }
 
@@ -55,7 +76,9 @@ const reducer = combineReducers({
     arrLocations : arrLocationsReducer,
     isSearch : isSearchReducer,
     changIDViewMap :idViewMapReducer,
-    heightMap : chageHeightMap
+    heightMap : chageHeightMap,
+    ListKC : GetArrKhoangCach,
+    bk : chageBK,
 })
 
 export default store  = createStore(reducer);

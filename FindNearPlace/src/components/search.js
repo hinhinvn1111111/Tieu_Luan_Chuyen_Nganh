@@ -10,12 +10,12 @@ import {
 } from 'react-native';
 import MapView from 'react-native-maps';
 import {connect} from 'react-redux';
-import {ChangeIDViewMap,chageHeightMap,chageHeightMap1} from '../redux/dispatch';
+import {ChangeIDViewMap,chageHeightMap,chageHeightMap1,PushLocationFromDistance,DeleteLocationFromDistance,ChangeBK} from '../redux/dispatch';
 import Carousel from 'react-native-snap-carousel';
 import Picker from 'react-native-wheel-picker';
 var PickerItem = Picker.Item;
 
-
+export const  arr = [];
 
 const {w,h}  = Dimensions.get('window');
 
@@ -25,12 +25,12 @@ class Search extends Component {
         this.state = {
             language:"",
             selectedItem : 3,
-            itemList: ['1 km','2 km','3 km','5 km','8 km','10 km'],
-            latitude : 0,
-            longitude : 0
+            lat : 0,
+            long : 0,
+            itemList: ['0.1','0.2','0.5','1','2','3','5','8','10']
         }
     }
-
+    
     // componentDidMount() {
     //     navigator.geolocation.getCurrentPosition(
     //        (position) => {
@@ -44,6 +44,19 @@ class Search extends Component {
     //        { enableHighAccuracy: false, timeout: 2000, maximumAge: 1000 },
     //      );
     //    }
+    componentWillMount(){
+        
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+              const lat =position.coords.latitude;
+              const long = position.coords.longitude;
+              this.setState({lat,long})
+              alert(lat + "       " + long)
+          },
+          (error) => alert(error.message),
+          { enableHighAccuracy: true, timeout: 200000, maximumAge: 1000 }
+        )
+    }
 
     onPickerSelect (index) {
         this.setState({
@@ -61,7 +74,7 @@ class Search extends Component {
         })
     }
 
-    _KhoangCach(lat1,long1,lat2,long2){
+    _KhoangCach(lat1,long1,lat2,long2,kc){
         var circumference = 40000;
         var distance = 0;
         var lat1Rad = lat1*Math.PI/180;
@@ -76,7 +89,33 @@ class Search extends Component {
             Math.sin(lat2Rad) * Math.sin(lat1Rad) + Math.cos(lat2Rad) * Math.cos(lat1Rad) * Math.cos(longDiff)
         );
         distance = circumference * angleCaculation / (2 * Math.PI);
-        return distance;
+        // return distance;
+        if(distance <= kc){
+            return distance;
+            //return true;
+        }
+        //return false;
+        return 0;
+    }
+
+    _dhahsdsajkd(){
+        
+        // for(let i of this.props.arrLocations){
+        //     if(this._KhoangCach(this.state.lat,this.state.long,i.Latitude,i.Longtitude,this.state.itemList[this.state.selectedItem])){
+        //         this.props.PushLocationFromDistance(i);
+        //     }
+        // }
+        for(let i of this.props.arrLocations){
+            var t = this._KhoangCach(this.state.lat,this.state.long,i.Latitude,i.Longtitude,this.state.itemList[this.state.selectedItem]);
+            if(t>0){
+                var b = {place : i,kc : t};
+                this.props.PushLocationFromDistance(b);
+            }    
+            
+        }
+        for(let i of this.props.ListKC){
+            alert(i.Title);
+        }
     }
     _KhoangCach2(lat1,long1,lat2,long2){
         var p = Math.PI/180;
@@ -91,45 +130,31 @@ class Search extends Component {
         //     var t = this._KhoangCach(10.877040, 106.755236,10.877056, 106.767036);
         //     alert(t + "");
         // }
-        var t = this._KhoangCach(10.877065, 106.767022,10.851403, 106.771992);
+        var t = this._KhoangCach(10.850715, 106.771225,10.773765, 106.697473);
         alert(t +"");
     }
 
     _goToMap(){
-        this.props.ChangeIDViewMap();
-        if(this.props.arrLocations.lenght!==0){
-            this.props.chageHeightMap();
-        }else{
-            this.props.chageHeightMap1();
+        this.props.DeleteLocationFromDistance();
+        for(let i of this.props.arrLocations){
+            var t = this._KhoangCach(this.state.lat,this.state.long,i.Latitude,i.Longtitude,this.state.itemList[this.state.selectedItem]);
+            if(t>0){
+                var k = Number.parseFloat(t).toFixed(2);
+                this.props.PushLocationFromDistance(i,k);
+            }    
+            
         }
+        //  for(let i of this.props.arrLocations){
+        //     if(this._KhoangCach(this.state.lat,this.state.long,i.Latitude,i.Longtitude,this.state.itemList[this.state.selectedItem])){
+        //         this.props.PushLocationFromDistance(i);
+        //     }
+        // }
+        this.props.ChangeBK(this.state.itemList[this.state.selectedItem]);
+        this.props.ChangeIDViewMap();
+        
         this.props.navigation.navigate('screen1');
     }
-    componentWillMount(){
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-              this.setState({
-                 latitude: position.coords.latitude,
-                 longitude: position.coords.longitude,
-              });
-              alert(this.state.latitude+"");
-            },
-            (error) => this.setState({ error: error.message }),
-            { enableHighAccuracy: false, timeout: 200000, maximumAge: 1000 },
-          );
-    }
     render() {
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-              this.setState({
-                 latitude: position.coords.latitude,
-                 longitude: position.coords.longitude
-              });
-              //alert(this.state.latitude+"");
-            },
-            (error) => this.setState({ error: error.message }),
-            { enableHighAccuracy: false, timeout: 2000, maximumAge: 1000 }
-          );
-        
         return (
             <View style={{flex:1,backgroundColor:'lightblue',borderLeftWidth:3,borderRightWidth:3,borderColor:'red',borderBottomWidth:0}}>
                 <View style={{height:50,backgroundColor:'red'}}>
@@ -137,7 +162,7 @@ class Search extends Component {
                         <Text style={{textAlign:'center',fontSize:12}}>{this.props.navigation.state.params.value}</Text>
                     </View>
                 </View>
-                <View style={{borderRadius:10,flex:4,alignItems:"center",justifyContent:'center',backgroundColor:'#666600',borderWidth:1,elevation:5,margin:10,marginTop:50}}>
+                <View style={{borderRadius:10,flex:4,alignItems:"center",justifyContent:'center',backgroundColor:'black',borderWidth:1,elevation:5,margin:10,marginTop:50}}>
                     <View style={{marginTop:10,marginLeft:10,marginRight:10,flexDirection:'row',justifyContent:'space-between',alignItems:'center'}}>
                         <Text style={{fontWeight:'bold',margin:10,color:'#fff'}}>Vị trí</Text>
                         
@@ -154,7 +179,7 @@ class Search extends Component {
                                 ))}
                         </Picker>
                         <Text style={{margin: 20, color: '#ffffff',fontSize:18}}>
-                            Khoảng cách :{this.state.itemList[this.state.selectedItem]}
+                            Khoảng cách :{this.state.itemList[this.state.selectedItem]} km
                         </Text>                   
                     </View>
                     
@@ -163,9 +188,9 @@ class Search extends Component {
                     <TouchableOpacity onPress={this._goToMap.bind(this)}>
                         <Text style={{width:100,height:40,backgroundColor:'green',textAlign:'center',alignContent:'center',padding:10,marginTop:10,borderRadius:5,fontWeight:'bold',color:'#fff',elevation:5}}>Tìm kiếm</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={()=>alert(this.state.latitude)}>
-                        <Text style={{width:100,height:40,backgroundColor:'green',textAlign:'center',alignContent:'center',padding:10,marginTop:5,borderRadius:5,fontWeight:'bold',color:'#fff',elevation:5}}>Khoảng cách</Text>
-                    </TouchableOpacity>
+                    {/* <TouchableOpacity onPress={()=>this._dhahsdsajkd()}>
+                        <Text style={{marginLeft:15,width:100,height:40,backgroundColor:'green',textAlign:'center',alignContent:'center',padding:10,marginTop:5,borderRadius:5,fontWeight:'bold',color:'#fff',elevation:5}}>Khoảng cách</Text>
+                    </TouchableOpacity> */}
                 </View>
                 
             </View>
@@ -177,8 +202,9 @@ function mapStateToProps(state){
     return { 
         arrLocations : state.arrLocations,
         isSearch : state.isSearch,
-        id : state.changIDViewMap
+        id : state.changIDViewMap,
+        ListKC : state.ListKC
     };
 }
 
-export default connect(mapStateToProps,{ChangeIDViewMap,chageHeightMap,chageHeightMap1})(Search);
+export default connect(mapStateToProps,{ChangeIDViewMap,chageHeightMap,chageHeightMap1,PushLocationFromDistance,DeleteLocationFromDistance,ChangeBK})(Search);

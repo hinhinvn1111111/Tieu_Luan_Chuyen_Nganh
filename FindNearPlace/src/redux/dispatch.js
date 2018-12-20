@@ -36,3 +36,23 @@ export function chageHeightMap1(){
         type : 'chageHeightMap1'
     }
 }
+
+export function PushLocationFromDistance(value,t){
+    return{
+        type : 'push',
+        value,t
+    }
+}
+
+export function DeleteLocationFromDistance(){
+    return{
+        type : 'delete'
+    }
+}
+
+export function ChangeBK(value){
+    return{
+        type : 'chageBK',
+        value
+    }
+}
