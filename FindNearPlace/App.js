@@ -3,6 +3,9 @@ import { View,YellowBox } from 'react-native';
 import Main from './src/components/home';
 import {Provider} from 'react-redux';
 import store from './src/redux/store';
+import Login from './src/components/login';
+import {createStackNavigator} from 'react-navigation';
+import Register from './src/components/register';
 
 YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
 YellowBox.ignoreWarnings([
@@ -16,8 +19,21 @@ export default class App extends Component {
     render() {
         return (
             <Provider store={store}>
-                <Main />
+                <Screen />
             </Provider>
+            
         );
     }
 };
+
+const Screen = createStackNavigator({
+    LoginScreen : {
+        screen : Login
+    },
+    HomeScreen :{
+        screen : Main
+    },
+    RegisterScreen : {
+        screen : Register
+    }
+})

@@ -56,3 +56,19 @@ export function ChangeBK(value){
         value
     }
 }
+
+export function DangNhap(usn,pw){
+    return{
+        type : 'login',
+        usn,
+        pw
+    }
+}
+
+export function DangKi(usn,pw){
+    return{
+        type : 'dangki',
+        usn,
+        pw
+    }
+}

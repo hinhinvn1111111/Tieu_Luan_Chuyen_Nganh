@@ -160,7 +160,7 @@ class Map extends React.Component {
         var renderitem=({item,index})=>{
             return (
                 <View key={index} style={{zIndex:10,position:'absolute',width:180,height:120,backgroundColor:'blue',margin:10,alignItems:"center"}}>
-                    <TouchableOpacity onPress={()=>this.props.navigation.navigate("chitietPlace",{item:item.place})} >
+                    <TouchableOpacity onPress={()=>this.props.navigation.push("chitietPlace",{item:item.place})} >
                         <Image
                             style={{width:180,height:80}}
                             source={{uri:item.place.Image}}
@@ -195,6 +195,7 @@ class Map extends React.Component {
                 latitudeDelta: 0.0122,
                 longitudeDelta:0.009
             }}
+            key={this.props.id}
             style={{width:"100%",height:"93%"}}
             >
                 <MapView.Circle 

@@ -32,6 +32,9 @@ export default class Main extends Component {
             selected : true
         }
     }
+    static navigationOptions = {
+        header:null
+      };
     render() {
         return (
             <View style={{flex:1,backgroundColor:''}}>

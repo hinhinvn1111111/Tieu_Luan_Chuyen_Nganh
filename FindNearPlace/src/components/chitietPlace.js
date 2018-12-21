@@ -11,14 +11,20 @@ import {
 } from 'react-native';
 StatusBar.setHidden(true);
 const {width,height} = Dimensions.get('window');
-export default class ChiTietPlace extends Component {
+import {ChangeIDViewMap} from '../redux/dispatch';
+import {connect} from 'react-redux';
+class ChiTietPlace extends Component {
     state = {  }
     render() {
         return (
             <View style={{width,height,alignItems:'center',backgroundColor:'lightblue'}}>
                 <View style={{width,height:200}}>
                     <View  style={{zIndex:1, width:50,height:50,position:'absolute',margin:10}}>
-                        <TouchableOpacity onPress={()=>this.props.navigation.navigate('screen1')}>
+                        <TouchableOpacity onPress={()=>{
+                            this.props.ChangeIDViewMap();
+                            this.props.navigation.push('screen1');
+                            
+                        }}>
                             <Image 
                                 style={{width:30,height:30,resizeMode:'cover'}}
                                 source={{uri:'https://img.icons8.com/color/2x/back.png'}}
@@ -47,3 +53,13 @@ export default class ChiTietPlace extends Component {
         );
     }
 }
+function mapStateToProps(state){
+    return { 
+        arrLocations : state.arrLocations,
+        isSearch : state.isSearch,
+        id : state.changIDViewMa,
+        ListKC : state.ListKC,
+        bk : state.bk
+    };
+}
+export default connect(mapStateToProps,{ChangeIDViewMap})(ChiTietPlace);
