@@ -24,6 +24,11 @@ export function ChangeIDViewMap(){
         type : 'change'
     }
 }
+export function ChangeIDViewMap2(){
+    return{
+        type : 'change2'
+    }
+}
 
 export function chageHeightMap(){
     return{
@@ -70,5 +75,12 @@ export function DangKi(usn,pw){
         type : 'dangki',
         usn,
         pw
+    }
+}
+
+export function GetProduces(value){
+    return{
+        type : 'getProduce',
+        value
     }
 }

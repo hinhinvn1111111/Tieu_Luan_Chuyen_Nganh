@@ -9,6 +9,8 @@ const arrKhoangCach = [];
 const bk = 0.0;
 
 
+
+
 const arrLocationsReducer= (state=defaultArrLocations,action)=>{
     
     if(action.type==='getDataSearch'){
@@ -101,6 +103,36 @@ const arrLoginReducer = (state=defaultArrLocations,action)=>{
     return state;
 }
 
+const ProducesReducer= (state=defaultArrLocations,action)=>{
+    
+    if(action.type==='getProduce'){
+        arrProduces=[];
+        try{
+            fetch('http://192.168.40.2:8888/Tieu_Luan_Chuyen_Nganh/Server/getListProduceFromPlace.php',{
+            method:'POST',
+            body:JSON.stringify({
+                ID : action.value,   
+            })
+            })
+            .then((response)=>response.json())
+            .then((responsiveJSON)=>{
+                for(let i of responsiveJSON){
+                    arrProduces.push(i);
+                }
+            })
+            .catch((e)=>{
+                alert(e);
+            })
+        }catch{
+
+        }
+        return arrProduces;
+        
+    }
+        
+    return state;
+}
+
 
 
 const isSearchReducer = (state=isSearch,action)=>{
@@ -110,6 +142,7 @@ const isSearchReducer = (state=isSearch,action)=>{
 
 const idViewMapReducer = (state=idViewMap,action)=>{
     if(action.type==='change') return state=state+1;
+    if(action.type==='change2') return state=state+20;
     return state;
 }
 
@@ -142,6 +175,7 @@ const reducer = combineReducers({
     ListKC : GetArrKhoangCach,
     bk : chageBK,
     arrLogin : arrLoginReducer,
+    arrProduces : ProducesReducer
 })
 
 export default store  = createStore(reducer);

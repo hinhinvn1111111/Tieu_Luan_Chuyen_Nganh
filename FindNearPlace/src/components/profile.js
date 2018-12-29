@@ -12,6 +12,7 @@ import {
     TextInput,
     Alert
 } from 'react-native';
+
 var imv = '';
 YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
 YellowBox.ignoreWarnings([
@@ -19,6 +20,7 @@ YellowBox.ignoreWarnings([
   'Warning: componentWillReceiveProps is deprecated',
 ]);
 import {ID,usn,pw,Avartar,ID_Role,Sex,Email} from './login';
+
 const {width,height} = Dimensions.get('window');
 export default class Profile extends Component {
     constructor(props){
@@ -161,6 +163,24 @@ export default class Profile extends Component {
         );
     }
 
+    // show(){
+    //     pick((source,data)=>this.setState({avatarSource:source,data:data}));
+    //     this.Upload();
+    // }
+
+    // Upload(){
+    //     upload(
+    //       [
+    //         {name : 'info',data :'hinhin'},
+    //         {name:'image',filename:'image.jpg',data:this.state.data}
+    //       ]
+          
+    //     )
+    //     .then(res=>{console.log(res.data),this.setState({AVATAR:res.data})})
+    //     .catch(err=>console.log(err))
+    // }
+  
+
     render() {
         return (
             <View style={{flex:1,backgroundColor:'lightblue'}}>
@@ -172,14 +192,19 @@ export default class Profile extends Component {
                     />
 
                 </ImageBackground>
-                {/* <View  style={{zIndex:1, width:50,height:50,position:'absolute',margin:10}}>
-                    <TouchableOpacity onPress={()=>{}}>
+                
+                    {/* <TouchableOpacity style={{zIndex:10, width:50,height:50,position:'absolute',marginTop:160,marginLeft:90}} 
+                        onPress={()=>{
+                            this.show()
+                            
+                            alert(this.state)
+                        }}>
                         <Image 
-                            style={{width:30,height:30,resizeMode:'cover'}}
-                            source={{uri:'https://img.icons8.com/color/2x/back.png'}}
+                            style={{width:50,height:50,resizeMode:'cover'}}
+                            source={{uri:'https://img.icons8.com/color/2x/old-time-camera.png'}}
                         />
-                    </TouchableOpacity>
-                </View> */}
+                    </TouchableOpacity> */}
+               
                 <View style={{flex:1,marginTop:90,marginLeft:10,marginRight:10}}>
                     <Text style={{width,textAlign:"center",fontSize:30}}>Thông tin cá nhân</Text>
                     {this._RenderThongTincaNhan()}

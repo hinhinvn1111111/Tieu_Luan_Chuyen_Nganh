@@ -2,20 +2,22 @@ import React, {Component} from 'react';
 import {
     View,
     Text,
-    Image,
     TouchableOpacity,
     TextInput,
-    Animated,
     Dimensions,
 } from 'react-native';
-import MapView from 'react-native-maps';
+
 import {connect} from 'react-redux';
 import {ChangeIDViewMap,chageHeightMap,chageHeightMap1,PushLocationFromDistance,DeleteLocationFromDistance,ChangeBK} from '../redux/dispatch';
-import Carousel from 'react-native-snap-carousel';
+import RNGooglePlaces from 'react-native-google-places';
 import Picker from 'react-native-wheel-picker';
 var PickerItem = Picker.Item;
 
 export const  arr = [];
+export var latSearch = 10.866925;
+export var longSearch = 106.762001;
+export var name = '';
+
 
 const {w,h}  = Dimensions.get('window');
 
@@ -24,11 +26,30 @@ class Search extends Component {
         super(props);
         this.state = {
             language:"",
-            selectedItem : 3,
+            selectedItem : 2,
+            place : 'Vị trí của bạn',
             lat : 0,
             long : 0,
             itemList: ['0.1','0.2','0.5','1','2','3','5','8','10']
         }
+    }
+    openSearchModal() {
+        RNGooglePlaces.openAutocompleteModal({
+        type: 'address',
+        country: 'VN',
+        latitude: 53.544389,
+        longitude: -113.490927,
+        radius: 10
+        })
+        .then((place) => {
+            this.setState({place:place.name,lat:place.latitude,long:place.longitude});
+            latSearch = place.latitude;
+            longSearch = place.longitude;
+            name=place.name;
+            // place represents user's selection from the
+            // suggestions and it is a simplified Google Place object.
+        })
+        .catch(error => alert(error.message));  // error is a Javascript Error object
     }
     
     // componentDidMount() {
@@ -50,11 +71,13 @@ class Search extends Component {
           (position) => {
               const lat =position.coords.latitude;
               const long = position.coords.longitude;
-              this.setState({lat,long})
+              this.setState({lat,long});
+              latSearch = lat;
+              longSearch = long;
               alert(lat + "       " + long)
           },
           (error) => alert(error.message),
-          { enableHighAccuracy: true, timeout: 200000, maximumAge: 1000 }
+          { enableHighAccuracy: true, timeout: 20000000000, maximumAge: 1000 }
         )
     }
 
@@ -166,7 +189,7 @@ class Search extends Component {
                     <View style={{marginTop:10,marginLeft:10,marginRight:10,flexDirection:'row',justifyContent:'space-between',alignItems:'center'}}>
                         <Text style={{fontWeight:'bold',margin:10,color:'#fff'}}>Vị trí</Text>
                         
-                        <TextInput style={{flex:1,padding:10,height:40,margin:10,backgroundColor:'#fff',borderRadius:5,borderColor:'black',elevation:2}}/>
+                        <TextInput onFocus={()=>this.openSearchModal()} placeholder={this.state.place} style={{flex:1,padding:10,height:40,margin:10,backgroundColor:'#fff',borderRadius:5,borderColor:'black',elevation:2}}/>
                     </View>
                     
                     <View style={{marginTop:30,marginLeft:10,marginRight:10,flexDirection:'row',justifyContent:'space-between',alignItems:'center'}}>

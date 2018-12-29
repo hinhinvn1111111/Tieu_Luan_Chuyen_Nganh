@@ -19,6 +19,7 @@
 	$email = $obj['email'];
 
 	$query = "UPDATE `login` SET PASSWORD='$pw',Sex='$sex',Email='$email' WHERE Username='$usn'";
+	
 	mysqli_query($conn,$query)
 	
 

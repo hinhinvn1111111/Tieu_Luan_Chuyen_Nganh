@@ -12,13 +12,12 @@ import {
 import MapView from 'react-native-maps';
 import {connect} from 'react-redux';
 
-import {GetDataSearch,MEMORIZED,ISSearch,ChangeIDViewMap,DeleteLocationFromDistance} from '../redux/dispatch';
+import {GetDataSearch,MEMORIZED,ISSearch,ChangeIDViewMap,DeleteLocationFromDistance,GetProduces} from '../redux/dispatch';
 import Carousel from 'react-native-snap-carousel';
 import MapViewDirections from 'react-native-maps-directions';
 import {arr} from './search';
-const origin = {latitude: 37.3318456, longitude: -122.0296002};
-const destination = {latitude: 37.771707, longitude: -122.4053769};
-const GOOGLE_MAPS_APIKEY = 'AIzaSyAUbpIeR5QgtwjHBFgFEr4A-9peuD_NyjU';
+import {latSearch,longSearch,name} from './search';
+
 
 YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
 YellowBox.ignoreWarnings([
@@ -37,8 +36,8 @@ class Map extends React.Component {
             value : '',
             num : 0,
             animated : new Animated.Value(0),
-            lat:0,
-            long:0
+            lat:10.866925,
+            long:106.762001
         }
     }
     _renderMarekrs(){
@@ -144,23 +143,36 @@ class Map extends React.Component {
 
     componentWillMount(){
         navigator.geolocation.getCurrentPosition(
-          (position) => {
-              const lat =position.coords.latitude;
-              const long = position.coords.longitude;
-              this.setState({lat,long})
-              //alert(lat + "       " + long)
-          },
-          (error) => alert(error.message),
-          { enableHighAccuracy: true, timeout: 200000, maximumAge: 1000 }
-        )
+            (position) => {
+                const lat =position.coords.latitude;
+                const long = position.coords.longitude;
+                this.setState({lat,long})
+                //alert(lat + "       " + long)
+            },
+            (error) => alert(error.message),
+            { enableHighAccuracy: true, timeout: 20000000000, maximumAge: 1000 }
+          )
+        
+        // try{
+        //     var lat = this.props.navigation.state.params.lat;
+        //     var long = this.props.navigation.state.params.long;
+        //     this.setState({lat,long});
+        // }catch{
+            
+        // }
     }
+
+    
     
     render() {
         
         var renderitem=({item,index})=>{
             return (
                 <View key={index} style={{zIndex:10,position:'absolute',width:180,height:120,backgroundColor:'blue',margin:10,alignItems:"center"}}>
-                    <TouchableOpacity onPress={()=>this.props.navigation.push("chitietPlace",{item:item.place})} >
+                    <TouchableOpacity onPress={()=>{
+                        this.props.navigation.push("chitietPlace",{item});
+                        this.props.GetProduces(item.place.ID);
+                        }} >
                         <Image
                             style={{width:180,height:80}}
                             source={{uri:item.place.Image}}
@@ -176,6 +188,7 @@ class Map extends React.Component {
                 </View>
             );
         }
+        
         Animated.timing(
             this.state.animated,
             {
@@ -184,26 +197,41 @@ class Map extends React.Component {
             }
         ).start();
         return (
-        <View index={this.props.id} style={{flex:1}} key={1}>
+        <View index={this.props.id} style={{zIndex:1,flex:1}} key={1}>
             {this.IsSearch()}
             <MapView
+
                 showsUserLocation={true}
                 followsUserLocation={true}
-            initialRegion={{
-                latitude: 10.877030,
-                longitude: 106.767133,
-                latitudeDelta: 0.0122,
-                longitudeDelta:0.009
-            }}
+                
+                region={{
+                    latitude: latSearch,
+                    longitude: longSearch,
+                    latitudeDelta: 0.0122,
+                    longitudeDelta:0.009
+                }}
             key={this.props.id}
             style={{width:"100%",height:"93%"}}
             >
                 <MapView.Circle 
-                    center={{latitude:this.state.lat,longitude:this.state.long}}
+                    center={{latitude:latSearch,longitude:longSearch}}
                     radius={parseFloat(this.props.bk) * 1000}
                     strokeWidth={1}
                     fillColor="rgba(255,0,0,0.1)"
                 />
+                <MapView.Marker
+                     title = {name}   
+                     coordinate={{
+                        latitude:latSearch,
+                        longitude:longSearch
+                    }}
+                       
+                >    
+                    <Image 
+                        style={{width:40,height:40,resizeMode:'cover'}}
+                        source={{uri:'https://img.icons8.com/color/2x/map-pin.png'}}
+                    />                   
+                </MapView.Marker>
                 {this._renderMarekrs()}
                 
             </MapView>  
@@ -244,4 +272,4 @@ function mapStateToProps(state){
     };
 }
 
-export default connect(mapStateToProps,{GetDataSearch,MEMORIZED,ISSearch,ChangeIDViewMap,DeleteLocationFromDistance})(Map);
+export default connect(mapStateToProps,{GetDataSearch,MEMORIZED,ISSearch,ChangeIDViewMap,DeleteLocationFromDistance,GetProduces})(Map);

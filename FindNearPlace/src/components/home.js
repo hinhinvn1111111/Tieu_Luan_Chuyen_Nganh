@@ -15,6 +15,9 @@ import TabNavigator from 'react-native-tab-navigator';
 import Search from './search';
 import ListPlaceSearch from './listPlaceSearch';
 import ChiTietPlace from './chitietPlace';
+import ChiDuong from './chiduong';
+import chitietPlace from './chitietPlace';
+import Nhakinhdoanh from './nhakinhdoanh';
 
 export class Home extends Component {
     render(){
@@ -62,6 +65,16 @@ export default class Main extends Component {
                     </TabNavigator.Item>
 
                     <TabNavigator.Item
+                        selected={this.state.selectedTab === 'NhaKinhDoanh'}
+                        //title="Profile"
+                        renderIcon={() => <Image style={{width:26,height:26,resizeMode:'cover'}} source={{uri:'https://img.icons8.com/ios/2x/worldwide-location.png'}} />}
+                        renderSelectedIcon={() => <Image style={{width:26,height:26,resizeMode:'cover'}}  source={{uri:'https://img.icons8.com/color/2x/worldwide-location.png'}} />}
+                        //badgeText="1"
+                        onPress={() => {this.setState({ selectedTab: 'NhaKinhDoanh',selected : false })}}>
+                        {<Nhakinhdoanh style={{flex:1}}/>}
+                    </TabNavigator.Item>
+                    
+                    <TabNavigator.Item
                         selected={this.state.selectedTab === 'Setting'}
                         //title="Profile"
                         renderIcon={() => <Image style={{width:26,height:26,resizeMode:'cover'}} source={{uri:'https://png.icons8.com/carbon-copy/2x/settings.png'}} />}
@@ -70,59 +83,65 @@ export default class Main extends Component {
                         onPress={() => {this.setState({ selectedTab: 'Setting',selected : false })}}>
                         {<Setting style={{flex:1}}/>}
                     </TabNavigator.Item>
+
+                    
                 </TabNavigator>
             </View>
         );
     }
 }
 
-class A extends Component {
-    render(){
-        return(
-            <View>
-                <TouchableOpacity onPress={()=>this.props.navigation.navigate('screen3')}>
-                    <Text>Go to map</Text>
-                </TouchableOpacity>
-            </View>
-        )
-    }
-}
-class B extends Component {
-    constructor(props){
-        super(props);
-        this.state = {
-            isSearch : false,
-            value : '',
-            num : 0,
-            animated : new Animated.Value(0)
-        }
-    }
-    _a(){
-        this.props.navigation.navigate('screen2')
-    }
+// class A extends Component {
+//     render(){
+//         return(
+//             <View>
+//                 <TouchableOpacity onPress={()=>this.props.navigation.navigate('screen3')}>
+//                     <Text>Go to map</Text>
+//                 </TouchableOpacity>
+//             </View>
+//         )
+//     }
+// }
+// class B extends Component {
+//     constructor(props){
+//         super(props);
+//         this.state = {
+//             isSearch : false,
+//             value : '',
+//             num : 0,
+//             animated : new Animated.Value(0)
+//         }
+//     }
+//     _a(){
+//         this.props.navigation.navigate('screen2')
+//     }
     
-    render(){
-        return(
-            <View style={{flex:1}}>
-                <MapView
+//     render(){
+//         return(
+//             <View style={{flex:1}}>
+//                 <MapView
             
-            initialRegion={{
-                latitude: 10.877129,
-                longitude: 106.766754,
-                latitudeDelta: 0.0122,
-                longitudeDelta:0.009
-            }}
-            style={{width:"100%",height:"80%"}}
-            >
+//             initialRegion={{
+//                 latitude: 10.877129,
+//                 longitude: 106.766754,
+//                 latitudeDelta: 0.0122,
+//                 longitudeDelta:0.009
+//             }}
+//             style={{width:"100%",height:"80%"}}
+//             >
             
-            </MapView>  
-            <TouchableOpacity 
-                onPress={this._a.bind(this)}
-            ><Text>Go to A</Text></TouchableOpacity>
-            </View>
-        )
-    }
-}
+//             </MapView>  
+//             <TouchableOpacity 
+//                 onPress={this._a.bind(this)}
+//             ><Text>Go to A</Text></TouchableOpacity>
+//             </View>
+//         )
+//     }
+// }
+
+
+
+
 
 const Map1 =  createStackNavigator({
     screen1 : {
@@ -141,7 +160,13 @@ const Map1 =  createStackNavigator({
         screen : ListPlaceSearch
     },
     chitietPlace : {
-        screen : ChiTietPlace,
+        screen : chitietPlace,
+        navigationOptions : {
+            header : null
+        }
+    },
+    chiduong : {
+        screen : ChiDuong,
         navigationOptions : {
             header : null
         }

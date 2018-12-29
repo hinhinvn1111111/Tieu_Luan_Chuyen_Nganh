@@ -3,6 +3,11 @@ package com.findnearplace;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.arttitude360.reactnative.rngoogleplaces.RNGooglePlacesPackage;
+import com.zyu.ReactNativeWheelPickerPackage;
+import com.airbnb.android.react.maps.MapsPackage;
+import com.imagepicker.ImagePickerPackage;
+import com.RNFetchBlob.RNFetchBlobPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -25,8 +30,11 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+          new RNGooglePlacesPackage(),
+          new ReactNativeWheelPickerPackage(),
           new MapsPackage(),
-          new ReactNativeWheelPickerPackage()
+          new ImagePickerPackage(),
+          new RNFetchBlobPackage()
       );
     }
 
