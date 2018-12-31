@@ -33,7 +33,7 @@
 	
 	
 
-	$query1 = "SELECT p.ID,p.Latitude,p.Longitude,p.Place_Name,p.Decription,p.Image from place as p, produce as pr, cost as c WHERE p.ID=c.ID_Place AND pr.ID=c.ID_Produce AND pr.Produce_Name LIKE '%$keySearch%'";
+	$query1 = "SELECT DISTINCT p.ID,p.Latitude,p.Longitude,p.Place_Name,p.Decription,p.Image from place as p, produce as pr, cost as c WHERE p.ID=c.ID_Place AND pr.ID=c.ID_Produce AND pr.Produce_Name LIKE '%$keySearch%'";
 
 	$data = mysqli_query($conn,$query1);
 

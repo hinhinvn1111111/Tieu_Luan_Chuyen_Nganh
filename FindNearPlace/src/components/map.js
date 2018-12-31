@@ -12,7 +12,7 @@ import {
 import MapView from 'react-native-maps';
 import {connect} from 'react-redux';
 
-import {GetDataSearch,MEMORIZED,ISSearch,ChangeIDViewMap,DeleteLocationFromDistance,GetProduces} from '../redux/dispatch';
+import {GetDataSearch,MEMORIZED,ISSearch,ChangeIDViewMap,DeleteLocationFromDistance,GetProduces,GetComments} from '../redux/dispatch';
 import Carousel from 'react-native-snap-carousel';
 import MapViewDirections from 'react-native-maps-directions';
 import {arr} from './search';
@@ -172,6 +172,7 @@ class Map extends React.Component {
                     <TouchableOpacity onPress={()=>{
                         this.props.navigation.push("chitietPlace",{item});
                         this.props.GetProduces(item.place.ID);
+                        this.props.GetComments(item.place.ID);
                         }} >
                         <Image
                             style={{width:180,height:80}}
@@ -207,8 +208,8 @@ class Map extends React.Component {
                 region={{
                     latitude: latSearch,
                     longitude: longSearch,
-                    latitudeDelta: 0.0122,
-                    longitudeDelta:0.009
+                    latitudeDelta: 0.012,
+                    longitudeDelta:0.029
                 }}
             key={this.props.id}
             style={{width:"100%",height:"93%"}}
@@ -272,4 +273,4 @@ function mapStateToProps(state){
     };
 }
 
-export default connect(mapStateToProps,{GetDataSearch,MEMORIZED,ISSearch,ChangeIDViewMap,DeleteLocationFromDistance,GetProduces})(Map);
+export default connect(mapStateToProps,{GetDataSearch,MEMORIZED,ISSearch,ChangeIDViewMap,DeleteLocationFromDistance,GetProduces,GetComments})(Map);

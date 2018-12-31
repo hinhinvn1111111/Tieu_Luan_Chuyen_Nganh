@@ -8,38 +8,131 @@ import {
     Dimensions,
     ScrollView,
     StatusBar,
-    StyleSheet
+    StyleSheet,
+    YellowBox,
+    TextInput
 } from 'react-native';
 StatusBar.setHidden(true);
 
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
 import {createStackNavigator} from 'react-navigation';
 const {w,h} = Dimensions.get('window');
-import {ChangeIDViewMap,ChangeIDViewMap2} from '../redux/dispatch';
+import {ChangeIDViewMap,ChangeIDViewMap2,AddComments,DeleteComments} from '../redux/dispatch';
 import {connect} from 'react-redux';
+import {ID,usn,pw,Avartar,ID_Role,Sex,Email} from './login';
+import Modal from 'react-native-modalbox';
+
+YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
+YellowBox.ignoreWarnings([
+  'Warning: componentWillMount is deprecated',
+  'Warning: componentWillReceiveProps is deprecated',
+]);
+
 class ChiTietPlace extends Component {
+
+    constructor(props){
+        super(props);
+        this.state={
+            content : '',
+            idp : 0,
+            idl : 0,
+            key:1,
+            arrCOMMENTS :[],
+            content1:'',
+            refresh : false
+        }
+    }
+
     _renderItem({ item, index }){
-      
+        
         return(
-          <View key={index} style={{width:w,height:100,borderBottomWidth:1,borderBottomColor:'black'}}>
-              <View style={{height:80}}>
-                  <Text>{item.Price}</Text>
-               </View>
-          </View>
+          <TouchableOpacity onPress={()=>alert(item.Produce_Name)}>
+              <View key={index} style={{margin:10,width:340,height:80,borderBottomWidth:1,borderBottomColor:'black',flexDirection:'row'}}>
+                <Image 
+                    style={{flex:1}}
+                    source={{uri:item.Image}}
+                />
+                <View style={{flex:3,backgroundColor:'red', justifyContent:'center',alignItems:'center'}}>
+                    <Text style={{fontSize:20,fontWeight:'bold',color:'#fff'}}>{item.Produce_Name}</Text>
+                    <Text style={{fontSize:16,color:'#fff',marginTop:10}}>Giá : {item.Price} VNĐ</Text>
+                </View>
+            </View>
+          </TouchableOpacity>
         )
     
       }
-    state = {  }
+      componentWillMount(){
+        this.setState({idl:ID,idp:this.props.navigation.state.params.item.place.ID,arrCOMMENTS:this.props.arrComments});
+      }
+      componentDidMount(){
+        this.setState({idl:ID,idp:this.props.navigation.state.params.item.place.ID,arrCOMMENTS:this.props.arrComments});
+      }
+      _showModal(item){
+        this.refs.myModal.open();
+        this.setState({content1:item.Content})
+      }
+      _renderItem1({ item, index }){
+          
+        if(item.Username === usn){
+            return(
+                <View key={index} style={{margin:10,width:340,height:100,flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
+                    
+                    <Image 
+                        style={{width:40,height:40,borderRadius:20}}
+                        source={{uri:item.Avatar}}
+                    />
+                    <View style={{borderRadius:10,elevation:5,marginLeft:10,flex:1,backgroundColor:'#fff',borderWidth:1,borderColor:'blue',padding:7}}>
+                        <Text style={{color:'blue',fontSize:14}}>{item.Username}</Text>
+                        <Text style={{textAlign:'left',fontSize:16}}>{item.Content}</Text>
+                        <Text onPress={()=>this._showModal(item)} style={{color:'gray',position:'absolute',marginLeft:260,fontWeight:'bold'}}>...</Text>
+                    </View>
+                    
+                </View>
+              )
+        }
+        return(
+            <View key={index} style={{margin:10,width:340,height:80,flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
+                <Image 
+                    style={{width:40,height:40,borderRadius:20}}
+                    source={{uri:item.Avatar}}
+                />
+                <View style={{borderRadius:10,elevation:5,marginLeft:10,flex:1,backgroundColor:'#fff',borderWidth:1,borderColor:'blue',padding:7}}>
+                    <Text style={{color:'blue',fontSize:14}}>{item.Username}</Text>
+                    <Text style={{textAlign:'left',fontSize:16}}>{item.Content}</Text>
+                </View>
+            </View>
+          )
+    
+      }
+    
+    _ThemBinhLuan(){
+        this.props.AddComments(this.state.idl,this.state.idp,this.state.content);
+        this.setState({key:this.state.key+1});
+        this.setState({content:''});
+        alert('Thêm thành công !');
+        //this.setState({refresh:true});
+    }
+    _DeleteComment(){
+        this.props.DeleteComments(this.state.idl,this.state.idp,this.state.content1);
+        this.setState({key:this.state.key+1});
+        alert('Đã xóa');
+    }
+    _refresh(){
+        // this.setState({arrCOMMENTS:this.props.arrComments});
+        // this.setState({refresh:false});
+        // this.setState({key:this.state.key+1});
+    }
+
     render() {
         const { onScroll = () => {} } = this.props;
             return (
                 <ParallaxScrollView
+                key={this.state.key}
                 onScroll={onScroll}
-
                 headerBackgroundColor="red"
                 stickyHeaderHeight={ 40 }
                 parallaxHeaderHeight={ 200 }
-                backgroundSpeed={10}
+                backgroundSpeed={20}
 
                 
 
@@ -88,48 +181,91 @@ class ChiTietPlace extends Component {
                 //   </View>
                 // )}/>
                 >
-                    <View style={{width:w,height:120,backgroundColor:'blue', justifyContent:'center',alignItems:'center'}}>
-                    <Text style={{fontSize:20,fontWeight:'bold',color:'#fff',marginTop:10}}>
-                            {this.props.navigation.state.params.item.place.Title}
-                    </Text>
-                    <Text style={{fontSize:13,color:'#00FFFF',marginTop:10,textAlign:'center'}}>
-                            {this.props.navigation.state.params.item.place.Decription}
-                    </Text>
-                    <View style={{flex:1,flexDirection:'row',justifyContent:'center',alignItems:'center'}}>
-                            <Image style={{width:30,height:30,resizeMode:'cover'}} 
-                                source={{uri:'https://img.icons8.com/color/2x/taxi.png'}}
-                            />
-                            <Text style={{fontSize:12,color:'red',fontWeight:'bold'}}>{this.props.navigation.state.params.item.kc} km</Text>
-                    </View>
-                    </View>
-                    <View style={{width:w,height:600,backgroundColor:'#fff',alignItems:'center'}}>
-                        <Text style={{marginTop:30,fontSize:20,fontWeight:'bold',color:'blue'}}>Danh sách sản phẩm</Text>
-                        <FlatList style={{flex:1}}
-                            data={this.props.arrProduces}
-                            renderItem={({item,index}) => 
-                                <View key={index} style={{width:w,height:200,flexDirection:'row',backgroundColor:'gray'}}>
-                                    <Image 
-                                        style={{width:70,height:70}}
-                                        source={{uri:item.Image}}
-                                    />
-                                    
-                                        <Text style={{color:'red'}}>{item.Produce_Name}</Text>
-                                        <Text style={{color:'red'}}>{item.Price} VNĐ</Text>
-                                    
-                                </View>
-                            }
-                        />
+                    
+                    <View style={{width:w,backgroundColor:'blue', justifyContent:'center',alignItems:'center'}}>
+                        <Text style={{fontSize:20,fontWeight:'bold',color:'#fff',marginTop:10}}>
+                                {this.props.navigation.state.params.item.place.Title}
+                        </Text>
+                        <Text style={{fontSize:13,color:'#00FFFF',marginTop:10,textAlign:'center'}}>
+                                {this.props.navigation.state.params.item.place.Decription}
+                        </Text>
+                        <View style={{flex:1,flexDirection:'row',justifyContent:'center',alignItems:'center'}}>
+                                <Image style={{width:30,height:30,resizeMode:'cover'}} 
+                                    source={{uri:'https://img.icons8.com/color/2x/taxi.png'}}
+                                />
+                                <Text style={{fontSize:12,color:'red',fontWeight:'bold'}}>{this.props.navigation.state.params.item.kc} km</Text>
+                        </View>
                     </View>
 
-                    {/* <View style={{flex:1,backgroundColor:'#fff',alignItems:'center'}}>
+                    <View style={{height:600,backgroundColor:'#fff',alignItems:'center',marginBottom:40}}>
                         <Text style={{marginTop:30,fontSize:20,fontWeight:'bold',color:'blue'}}>Danh sách sản phẩm</Text>
-                        <FlatList style={{flex:1}}
-                            data={this.state.arr}
+                        <FlatList 
+                            style={{flex:1,marginTop:15}}
+                            data={this.props.arrProduces}
                             renderItem={
                                 this._renderItem.bind(this)
                             }
                         />
-                    </View> */}
+                    </View>
+
+                    <View style={{margin:10,width:340,height:80,flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
+                        <Image 
+                            style={{width:40,height:40,borderRadius:20}}
+                            source={{uri:Avartar}}
+                        />
+                        <TextInput 
+                            value={this.state.content}
+                            onChangeText={(vl)=>this.setState({content:vl})}
+                            style={{padding:10,elevation:5,marginLeft:10,flex:1,backgroundColor:'#fff', justifyContent:'center',alignItems:'center',borderWidth:1,borderColor:'lightblue'}}
+                        />
+                    </View>
+                    <View style={{height:50,justifyContent:'center',alignItems:'center'}}>
+                        <TouchableOpacity onPress={this._ThemBinhLuan.bind(this)}>
+                            <Text style={{fontSize:16,fontWeight:'bold',color:'#fff',textAlign:'center',padding:10,borderRadius:5,width:150,height:40,backgroundColor:'#476192'}}>Thêm bình luận</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={{height:600,backgroundColor:'#fff',alignItems:'center',marginTop:30}}>
+                        
+                        <FlatList style={{marginTop:20}}
+                            refreshing={false}
+                            onRefresh={()=>{}}
+                            scrollsToTop={false}
+                            data={this.state.arrCOMMENTS}
+                            renderItem={
+                                this._renderItem1.bind(this)
+                            }
+                        />
+                        <Modal 
+                            ref={'myModal'}
+                            position={'bottom'}
+                            style={{height:80,backgroundColor:'#fff'}}
+                        >
+                            <TouchableOpacity onPress={()=>alert('Update')} style={{flex:1,flexDirection:'row',justifyContent:'center',alignItems:'center'}}>
+                            <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+                                <Image 
+                                style={{width:26,height:26,resizeMode:'cover'}}
+                                source={{uri:'https://img.icons8.com/ios/2x/ball-point-pen-filled.png'}}
+                                />
+                            </View>
+                            <Text style={{fontSize:18,flex:4}}>Chỉnh sửa</Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity onPress={this._DeleteComment.bind(this)} style={{flex:1,flexDirection:'row',justifyContent:'center',alignItems:'center'}}>
+                            <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+                                <Image 
+                                style={{width:26,height:26,resizeMode:'cover'}}
+                                source={{uri:'https://img.icons8.com/ios/2x/cancel.png'}}
+                                />
+                            </View>
+                            <Text style={{fontSize:18,flex:4}}>Xóa</Text>
+                            </TouchableOpacity>
+                            
+                        </Modal>
+                    </View>
+                  
+                    
+                    
+                            
                 </ParallaxScrollView>
             )
         }
@@ -214,7 +350,8 @@ function mapStateToProps(state){
         id : state.changIDViewMa,
         ListKC : state.ListKC,
         bk : state.bk,
-        arrProduces : state.arrProduces
+        arrProduces : state.arrProduces,
+        arrComments : state.arrComments
     };
 }
-export default connect(mapStateToProps,{ChangeIDViewMap,ChangeIDViewMap2})(ChiTietPlace);
+export default connect(mapStateToProps,{ChangeIDViewMap,ChangeIDViewMap2,AddComments,DeleteComments})(ChiTietPlace);

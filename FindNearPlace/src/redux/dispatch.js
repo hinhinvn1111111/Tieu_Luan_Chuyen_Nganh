@@ -84,3 +84,28 @@ export function GetProduces(value){
         value
     }
 }
+
+export function GetComments(value){
+    return{
+        type : 'getComment',
+        value
+    }
+}
+
+export function AddComments(idl,idp,content){
+    return{
+        type : 'AddComment',
+        idl,
+        idp,
+        content
+    }
+}
+
+export function DeleteComments(idl,idp,content){
+    return{
+        type : 'DeleteComment',
+        idl,
+        idp,
+        content
+    }
+}
