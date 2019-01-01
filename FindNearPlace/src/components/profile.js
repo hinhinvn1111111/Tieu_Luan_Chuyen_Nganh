@@ -20,6 +20,7 @@ YellowBox.ignoreWarnings([
   'Warning: componentWillReceiveProps is deprecated',
 ]);
 import {ID,usn,pw,Avartar,ID_Role,Sex,Email} from './login';
+export var ID_RoleP = "";
 
 const {width,height} = Dimensions.get('window');
 export default class Profile extends Component {
@@ -43,7 +44,8 @@ export default class Profile extends Component {
             ID_ROLE : ID_Role,
             SEX : Sex,
             EMAIL : Email
-        })
+        });
+        ID_RoleP=ID_Role;
     }
     NangCapTaiKhoan(){
         return(
@@ -54,6 +56,7 @@ export default class Profile extends Component {
                   {text: 'Ok', onPress: () => {
                     try{
                         this.setState({ID_ROLE:2});
+                        ID_RoleP=2;
                         fetch('http://192.168.40.2:8888/Tieu_Luan_Chuyen_Nganh/Server/NangCapTaiKhoan.php',{
                         method:'POST',
                         body:JSON.stringify({

@@ -33,7 +33,7 @@
 	
 	
 
-	$query1 = "SELECT DISTINCT p.ID,p.Latitude,p.Longitude,p.Place_Name,p.Decription,p.Image from place as p, produce as pr, cost as c WHERE p.ID=c.ID_Place AND pr.ID=c.ID_Produce AND pr.Produce_Name LIKE '%$keySearch%'";
+	$query1 = "SELECT DISTINCT p.ID,p.Latitude,p.Longitude,p.Place_Name,p.Decription,p.Image,p.Username from place as p, produce as pr, cost as c WHERE p.ID=c.ID_Place AND pr.ID=c.ID_Produce AND pr.Produce_Name LIKE '%$keySearch%'";
 
 	$data = mysqli_query($conn,$query1);
 
@@ -46,19 +46,21 @@
 			$row['Longitude'],
 			$row['Place_Name'],
 			$row['Decription'],
-			$row['Image']
+			$row['Image'],
+			$row['Username']
 		));
 	}
 
 	echo json_encode($arrLogin);
 	class Login{
-		function Login($ID,$Latitude,$Longtitude,$Title,$Decription,$Image){
+		function Login($ID,$Latitude,$Longtitude,$Title,$Decription,$Image,$Username){
 			$this->ID=$ID;
 			$this->Latitude=$Latitude;
 			$this->Longtitude=$Longtitude;
 			$this->Title=$Title;
 			$this->Decription=$Decription;
 			$this->Image=$Image;
+			$this->Username=$Username;
 		}
 	}
 

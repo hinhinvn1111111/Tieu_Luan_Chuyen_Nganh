@@ -87,15 +87,15 @@ class Search extends Component {
         })
     }
 
-    onAddItem = () => {
-        var name = '10 km'
-        if (this.state.itemList.indexOf(name) == -1) {
-            this.state.itemList.push(name)
-        }
-        this.setState({
-            selectedItem: this.state.itemList.indexOf(name),
-        })
-    }
+    // onAddItem = () => {
+    //     var name = '10 km'
+    //     if (this.state.itemList.indexOf(name) == -1) {
+    //         this.state.itemList.push(name)
+    //     }
+    //     this.setState({
+    //         selectedItem: this.state.itemList.indexOf(name),
+    //     })
+    // }
 
     _KhoangCach(lat1,long1,lat2,long2,kc){
         var circumference = 40000;

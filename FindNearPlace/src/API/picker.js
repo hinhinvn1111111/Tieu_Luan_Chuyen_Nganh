@@ -18,7 +18,7 @@ const options = {
         console.log('User tapped custom button: ', response.customButton);
       } else {
         const source = { uri: response.uri };
-        console.log(response.uri);
+        //console.log(response.uri);
         cb(source,response.data);
       }
     });

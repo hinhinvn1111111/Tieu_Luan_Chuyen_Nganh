@@ -109,3 +109,15 @@ export function DeleteComments(idl,idp,content){
         content
     }
 }
+
+export function ThemDiaDiem(lat,long,name,place,image,usn){
+    return{
+        type : 'addPlace',
+        lat,
+        long,
+        name,
+        place,
+        image,
+        usn
+    }
+}

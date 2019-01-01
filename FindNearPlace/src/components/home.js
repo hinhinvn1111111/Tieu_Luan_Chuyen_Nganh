@@ -18,6 +18,7 @@ import ChiTietPlace from './chitietPlace';
 import ChiDuong from './chiduong';
 import chitietPlace from './chitietPlace';
 import Nhakinhdoanh from './nhakinhdoanh';
+import AddPlace from './addPlace';
 
 export class Home extends Component {
     render(){
@@ -65,13 +66,13 @@ export default class Main extends Component {
                     </TabNavigator.Item>
 
                     <TabNavigator.Item
-                        selected={this.state.selectedTab === 'NhaKinhDoanh'}
+                        selected={this.state.selectedTab === 'Business'}
                         //title="Profile"
                         renderIcon={() => <Image style={{width:26,height:26,resizeMode:'cover'}} source={{uri:'https://img.icons8.com/ios/2x/worldwide-location.png'}} />}
                         renderSelectedIcon={() => <Image style={{width:26,height:26,resizeMode:'cover'}}  source={{uri:'https://img.icons8.com/color/2x/worldwide-location.png'}} />}
                         //badgeText="1"
-                        onPress={() => {this.setState({ selectedTab: 'NhaKinhDoanh',selected : false })}}>
-                        {<Nhakinhdoanh style={{flex:1}}/>}
+                        onPress={() => {this.setState({ selectedTab: 'Business',selected : false })}}>
+                        {<Business style={{flex:1}}/>}
                     </TabNavigator.Item>
                     
                     <TabNavigator.Item
@@ -91,57 +92,20 @@ export default class Main extends Component {
     }
 }
 
-// class A extends Component {
-//     render(){
-//         return(
-//             <View>
-//                 <TouchableOpacity onPress={()=>this.props.navigation.navigate('screen3')}>
-//                     <Text>Go to map</Text>
-//                 </TouchableOpacity>
-//             </View>
-//         )
-//     }
-// }
-// class B extends Component {
-//     constructor(props){
-//         super(props);
-//         this.state = {
-//             isSearch : false,
-//             value : '',
-//             num : 0,
-//             animated : new Animated.Value(0)
-//         }
-//     }
-//     _a(){
-//         this.props.navigation.navigate('screen2')
-//     }
-    
-//     render(){
-//         return(
-//             <View style={{flex:1}}>
-//                 <MapView
-            
-//             initialRegion={{
-//                 latitude: 10.877129,
-//                 longitude: 106.766754,
-//                 latitudeDelta: 0.0122,
-//                 longitudeDelta:0.009
-//             }}
-//             style={{width:"100%",height:"80%"}}
-//             >
-            
-//             </MapView>  
-//             <TouchableOpacity 
-//                 onPress={this._a.bind(this)}
-//             ><Text>Go to A</Text></TouchableOpacity>
-//             </View>
-//         )
-//     }
-// }
-
-
-
-
+const Business  = createStackNavigator({
+    nhakinhdoanh : {
+        screen : Nhakinhdoanh,
+        navigationOptions : {
+            header : null
+        } 
+    },
+    addPlace : {
+        screen : AddPlace,
+        navigationOptions : {
+            header : null
+        } 
+    },
+})
 
 const Map1 =  createStackNavigator({
     screen1 : {

@@ -7,10 +7,17 @@ import {
     Dimensions,
     TouchableOpacity,
     Platform,
-    StatusBar
+    StatusBar,
+    YellowBox
 } from 'react-native';
 import {connect} from 'react-redux';
 import {DangNhap} from '../redux/dispatch';
+
+YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
+YellowBox.ignoreWarnings([
+  'Warning: componentWillMount is deprecated',
+  'Warning: componentWillReceiveProps is deprecated',
+]);
 
 StatusBar.setHidden(true);
 const {width,height} = Dimensions.get('window');

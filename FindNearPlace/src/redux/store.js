@@ -36,10 +36,44 @@ const arrLocationsReducer= (state=defaultArrLocations,action)=>{
         }catch{
 
         }
+
         return arrLocations;
         
     }
-    if(action.type==='MEMORIZED'){}
+    if(action.type==='addPlace'){
+        arrLocations1=[];
+        try{
+            fetch('http://192.168.40.2:8888/Tieu_Luan_Chuyen_Nganh/Server/addPlace.php',{
+            method:'POST',
+            body:JSON.stringify({
+                Latitude : action.lat,
+                Longitude : action.long,
+                Place_Name:action.name,
+                Decription : action.place,
+                Image : action.image,
+                Username:action.usn
+                // Latitude : 1,
+                // Longitude : 1,
+                // Place_Name:1,
+                // Decription : 1,
+                // Image : 1,
+                // Username:1
+            })
+            })
+            .then((response)=>response.json())
+            .then((responsiveJSON)=>{
+                for(let i of responsiveJSON){
+                    arrLocations1.push(i);
+                }
+            })
+            .catch((e)=>{
+                alert('Loi');
+            })
+        }catch{
+
+        }
+        return arrLocations1
+    }
         
     return state;
 }
