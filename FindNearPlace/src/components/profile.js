@@ -13,17 +13,22 @@ import {
     Alert
 } from 'react-native';
 
-var imv = '';
+import {connect} from 'react-redux';
+import {DangNhap,ChangeIDViewMap} from '../redux/dispatch';
+
 YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
 YellowBox.ignoreWarnings([
   'Warning: componentWillMount is deprecated',
   'Warning: componentWillReceiveProps is deprecated',
 ]);
 import {ID,usn,pw,Avartar,ID_Role,Sex,Email} from './login';
-export var ID_RoleP = "";
+export var ID_RoleP = ID_Role;
 
 const {width,height} = Dimensions.get('window');
-export default class Profile extends Component {
+class Profile extends Component {
+    static navigationOptions = {
+        header:null
+    };
     constructor(props){
         super(props);
         this.state = {
@@ -45,10 +50,11 @@ export default class Profile extends Component {
             SEX : Sex,
             EMAIL : Email
         });
-        ID_RoleP=ID_Role;
+        //ID_RoleP=ID_Role;
     }
     NangCapTaiKhoan(){
-        return(
+        
+        
             Alert.alert(
                 'Question',
                 'Bạn có chắc chắn không ?',
@@ -67,6 +73,7 @@ export default class Profile extends Component {
                         .catch((e)=>{
                             alert(e);
                         })
+                        alert('Nâng cấp thành công, vui lòng đăng nhập lại !');
                     }catch{
             
                     }
@@ -75,14 +82,19 @@ export default class Profile extends Component {
                 ],
                 { cancelable: false }
               )
-        )
+              
     }
     
     _RenderButtonNangCap(){
         if(this.state.ID_ROLE==1){
             return(
-                <TouchableOpacity onPress={()=>this.NangCapTaiKhoan()}>
-                    <Text style={{marginLeft:15,width:150,height:40,backgroundColor:'#476192',borderRadius:5,textAlign:'center',padding:5,color:'#fff',fontSize:18,fontWeight:'bold'}}>Nâng cấp TK</Text>
+                <TouchableOpacity onPress={()=>{
+                    
+                    this.NangCapTaiKhoan();
+                    //this.props.navigation.navigate('LoginScreen');
+                    
+                }}>
+                    <Text style={{marginLeft:15,width:150,height:40,backgroundColor:'#000011',borderRadius:5,textAlign:'center',padding:5,color:'#fff',fontSize:18,fontWeight:'bold'}}>Nâng cấp TK</Text>
                 </TouchableOpacity>
             )
         }
@@ -127,7 +139,7 @@ export default class Profile extends Component {
                     <Text style={{fontSize:24,marginEnd:15}}>Email : {this.state.EMAIL}</Text>
                     <View style={{flex:1,justifyContent:"center",alignItems:'center', flexDirection:'row'}}>
                         <TouchableOpacity onPress={()=>this.setState({update:!this.state.update})}>
-                            <Text style={{width:150,height:40,backgroundColor:'#476192',borderRadius:5,textAlign:'center',padding:5,color:'#fff',fontSize:18,fontWeight:'bold'}}>Cập nhật</Text>
+                            <Text style={{width:150,height:40,backgroundColor:'#000011',borderRadius:5,textAlign:'center',padding:5,color:'#fff',fontSize:18,fontWeight:'bold'}}>Cập nhật</Text>
                         </TouchableOpacity>
                         {this._RenderButtonNangCap()}
                     </View>
@@ -154,12 +166,13 @@ export default class Profile extends Component {
                     <TouchableOpacity onPress={()=>{
                         this.setState({update:!this.state.update});
                         this.CapNhatThongTin();
-                        alert('Cập nhật thành công !');                       
+                        alert('Cập nhật thành công !');      
+       
                     }}>
-                        <Text style={{width:100,height:40,backgroundColor:'#476192',borderRadius:5,textAlign:'center',padding:5,color:'#fff',fontSize:18,fontWeight:'bold'}}>Cập nhật</Text>
+                        <Text style={{width:100,height:40,backgroundColor:'#000022',borderRadius:5,textAlign:'center',padding:5,color:'#fff',fontSize:18,fontWeight:'bold'}}>Cập nhật</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={()=>this.setState({update:!this.state.update})}>
-                        <Text style={{elevation:5,marginLeft:30,width:100,height:40,backgroundColor:'#476192',borderRadius:5,textAlign:'center',padding:5,color:'#fff',fontSize:18,fontWeight:'bold'}}>Hủy</Text>
+                        <Text style={{marginLeft:30,width:100,height:40,backgroundColor:'#000022',borderRadius:5,textAlign:'center',padding:5,color:'#fff',fontSize:18,fontWeight:'bold'}}>Hủy</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -186,7 +199,7 @@ export default class Profile extends Component {
 
     render() {
         return (
-            <View style={{flex:1,backgroundColor:'lightblue'}}>
+            <View style={{flex:1,backgroundColor:'#66CC33'}}>
                 <ImageBackground style={{width,height:150,backgroundColor:'green',alignItems:'center'}} 
                     source={{uri:'http://www.websoft.vn/UploadFile/Article/xulyanh/cs5/light-glow-03.jpg'}}>
                     <Image 
@@ -216,3 +229,10 @@ export default class Profile extends Component {
         );
     }
 }
+
+function mapStateToProps(state){
+    return { 
+        
+    };
+  }
+export default connect(mapStateToProps,{DangNhap,ChangeIDViewMap})(Profile);

@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import {connect} from 'react-redux';
 import {DangNhap} from '../redux/dispatch';
-
+YellowBox.ignoreWarnings(['Require cycle:']);
 YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
 YellowBox.ignoreWarnings([
   'Warning: componentWillMount is deprecated',
@@ -109,7 +109,11 @@ class Login extends Component {
                         {_renderTextInputUSN()}
                         {_renderTextInputPW()}
                         <TouchableOpacity onPress={()=>{
-                            if(this.checkLogin()) this.props.navigation.push('HomeScreen');
+                            if(this.checkLogin()){
+                                this.props.navigation.push('profile');
+                                this.props.navigation.push('HomeScreen');
+                                
+                            } 
                             else alert('Sai tài khoản hoặc mật khẩu !');
                         }} style={{justifyContent:'center',alignItems:'center',backgroundColor:'rgba(255,0,0,0.75)',height:height/15,width:width*0.7}}>
                             <Text style={{color:'white'}} >LOGIN</Text>

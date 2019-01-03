@@ -14,6 +14,10 @@ import {connect} from 'react-redux';
 import {ThemDiaDiem} from '../redux/dispatch';
 import { usn } from './login';
 
+export var iMage = '';
+export var TenDiaDiem = '';
+export var DIaChi = '';
+
 class AddPlace extends Component {
     constructor(props){
         super(props);
@@ -69,8 +73,10 @@ class AddPlace extends Component {
             var long = this.state.long;
             var Place_Name = this.state.Place_Name;
             var place = this.state.place;
-            var img = this.state.s;
-            
+            //var img = this.state.s;
+            iMage=res.data;
+            TenDiaDiem=Place_Name;
+            DIaChi=place;
                                         
             this.props.ThemDiaDiem(lat,long,Place_Name,place,res.data,usn);
         })
@@ -109,6 +115,8 @@ class AddPlace extends Component {
                     {img}
                     <TouchableOpacity onPress={()=>{
                         this.Upload();
+                        alert('Thêm thành công !');
+                        this.props.navigation.push('place_nhakinhdoanh');
                         //alert(this.state.place);
                         //console.log(this.state.Place_Name);
                         //this.props.ThemDiaDiem(2,2,2,2,2,2);

@@ -6,6 +6,7 @@ import store from './src/redux/store';
 import Login from './src/components/login';
 import {createStackNavigator} from 'react-navigation';
 import Register from './src/components/register';
+import Profile from './src/components/profile';
 
 YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
 YellowBox.ignoreWarnings([
@@ -36,5 +37,8 @@ const Screen = createStackNavigator({
     },
     RegisterScreen : {
         screen : Register
+    },
+    profile : {
+        screen : Profile
     }
 })

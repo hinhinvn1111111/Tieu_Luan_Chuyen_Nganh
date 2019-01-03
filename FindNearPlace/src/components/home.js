@@ -13,12 +13,14 @@ import Profile from './profile';
 StatusBar.setHidden(true);
 import TabNavigator from 'react-native-tab-navigator';
 import Search from './search';
-import ListPlaceSearch from './listPlaceSearch';
-import ChiTietPlace from './chitietPlace';
+
+
 import ChiDuong from './chiduong';
 import chitietPlace from './chitietPlace';
 import Nhakinhdoanh from './nhakinhdoanh';
 import AddPlace from './addPlace';
+import AddProDuce_Business from './addProduce_Business';
+import Place_NhaKinhDoanh from './place_nhakinhdoanh';
 
 export class Home extends Component {
     render(){
@@ -99,12 +101,26 @@ const Business  = createStackNavigator({
             header : null
         } 
     },
+    place_nhakinhdoanh : {
+        screen : Place_NhaKinhDoanh,
+        navigationOptions : {
+            header : null
+        } 
+    },
     addPlace : {
         screen : AddPlace,
         navigationOptions : {
             header : null
         } 
     },
+    addProduce : {
+        screen : AddProDuce_Business,
+        navigationOptions : {
+            header : null
+        } 
+    }
+    
+    
 })
 
 const Map1 =  createStackNavigator({
@@ -120,9 +136,7 @@ const Map1 =  createStackNavigator({
             header : null
         } 
     },
-    screen3 : {
-        screen : ListPlaceSearch
-    },
+    
     chitietPlace : {
         screen : chitietPlace,
         navigationOptions : {

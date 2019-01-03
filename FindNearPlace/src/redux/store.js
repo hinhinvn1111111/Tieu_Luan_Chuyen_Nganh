@@ -4,7 +4,7 @@ import responsive from '../components/responsive';
 const defaultArrLocations = [];
 const defaultArrComment = [];
 const isSearch = false;
-const idViewMap = 0;
+const idViewMap = 1;
 const heightMap = "93%";
 const arrKhoangCach = [];
 const bk = 0.0;
