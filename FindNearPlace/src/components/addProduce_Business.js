@@ -89,7 +89,7 @@ export default class AddProDuce_Business extends Component {
     render() {
         let img = null ? null : <Image style={{width:120,height:120,resizeMode:'cover',marginTop:20}} source={this.state.avatarSource}/>
         return (
-            <View style={{flex:1,padding:16,backgroundColor:'lightblue'}}>
+            <View style={{flex:1,padding:16,backgroundColor:'lightblue',alignItems:'center'}}>
                 <View style={{width:100,height:100,position:'absolute'}}>
                     <TouchableOpacity onPress={()=>this.props.navigation.push('place_nhakinhdoanh')}>
                         <Image 

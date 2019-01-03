@@ -282,6 +282,7 @@ const GetArrKhoangCach = (state=arrKhoangCach,action)=>{
 
 const chageBK = (state=bk,action)=>{
     if(action.type==='chageBK') return state=action.value;
+    if(action.type==='deleteBK') return state=0;
     return state;
 }
 

@@ -8,20 +8,17 @@ export default class ChiDuong extends Component {
     state = {  }
     render() {
         return (
-            <View  style={{flex:1,zIndex:0}} >
+            <View  style={{flex:1,zIndex:10}} >
                 <Text>aaaaaaaaaaaaa</Text>
                 <MapView
-
-                showsUserLocation={true}
-                followsUserLocation={true}
-            initialRegion={{
+                region={{
                 latitude: 10.877031,
                 longitude: 106.767133,
                 latitudeDelta: 0.0122,
                 longitudeDelta:0.009
             }}
         
-            style={{width:300,height:300}}
+            style={{width:'100%',height:'100%',zIndex:2}}
             >
                
             </MapView>  

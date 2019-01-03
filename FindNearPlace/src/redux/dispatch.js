@@ -62,6 +62,12 @@ export function ChangeBK(value){
     }
 }
 
+export function DeleteBK(){
+    return{
+        type : 'deleteBK'
+    }
+}
+
 export function DangNhap(usn,pw){
     return{
         type : 'login',

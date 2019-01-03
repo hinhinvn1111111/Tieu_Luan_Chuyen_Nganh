@@ -10,7 +10,8 @@ import {
     Animated,
     YellowBox,
     TextInput,
-    Alert
+    Alert,
+    
 } from 'react-native';
 
 import {connect} from 'react-redux';

@@ -37,9 +37,34 @@ class Map extends React.Component {
             num : 0,
             animated : new Animated.Value(0),
             lat:10.866925,
-            long:106.762001
+            long:106.762001,
+            lat1:0,
+            long1:0,
+            name1 : ''
         }
     }
+
+    // _renderChiDuong(){
+    //     if(checkChiDuong==true){
+    //         return(
+    //             <MapViewDirections
+    //                 origin={{
+    //                     latitude:latSearch,
+    //                     longitude:longSearch
+    //                 }}
+    //                 destination={{
+    //                     latitude:this.state.lat1,
+    //                     longitude:this.state.long1
+    //                 }}
+    //                 apikey='AIzaSyDqkHt6XLNjOL0-orGPUSbEaeNUuACtRhg'
+    //                 strokeWidth={3}
+    //                 strokeColor="hotpink"
+    //             />
+    //         )
+    //     }else{
+
+    //     }
+    // }
     _renderMarekrs(){
         
         try {
@@ -119,14 +144,14 @@ class Map extends React.Component {
         }
         return (
             <Animated.View style={{width:width,height:40,backgroundColor,justifyContent:'space-between',alignItems:"center",flexDirection:'row',paddingLeft:10,paddingRight:10}}>
-                <TouchableOpacity onPress={()=>this.props.ISSearch()}>
+                <TouchableOpacity onPress={()=>{this.setState({lat1:0,long1:0,name1:''});this.props.ISSearch()}}>
                 <Image
                     style={{width:26,height:26,resizeMode:'cover'}}
                     source={{uri:'https://png.icons8.com/office/2x/search.png'}}
                 />
                 </TouchableOpacity>
                 <View style={{flex:1,marginLeft:10}}>
-                    <TouchableOpacity onPress={()=>this.props.ISSearch()}>
+                    <TouchableOpacity onPress={()=>{this.setState({lat1:0,long1:0,name1:''});this.props.ISSearch()}}>
                         <Text style={{color:'#fff'}}>Nhập từ bạn muốn tìm...</Text>
                     </TouchableOpacity>
                 </View>
@@ -160,6 +185,7 @@ class Map extends React.Component {
         // }catch{
             
         // }
+        
     }
 
     
@@ -170,6 +196,7 @@ class Map extends React.Component {
             return (
                 <View key={index} style={{zIndex:10,position:'absolute',width:180,height:120,backgroundColor:'blue',margin:10,alignItems:"center"}}>
                     <TouchableOpacity onPress={()=>{
+                        this.setState({lat1:item.place.Latitude,long1:item.place.Longtitude,name1:item.place.Title})
                         this.props.navigation.push("chitietPlace",{item});
                         this.props.GetProduces(item.place.ID);
                         this.props.GetComments(item.place.ID);
@@ -201,7 +228,7 @@ class Map extends React.Component {
         <View index={this.props.id} style={{zIndex:1,flex:1}} key={1}>
             {this.IsSearch()}
             <MapView
-
+                
                 showsUserLocation={true}
                 followsUserLocation={true}
                 
@@ -212,7 +239,7 @@ class Map extends React.Component {
                     longitudeDelta:0.029
                 }}
             key={this.props.id}
-            style={{width:"100%",height:"93%"}}
+            style={{width:"100%",height:"93%",zIndex:1}}
             >
                 <MapView.Circle 
                     center={{latitude:latSearch,longitude:longSearch}}
@@ -233,8 +260,20 @@ class Map extends React.Component {
                         source={{uri:'https://img.icons8.com/color/2x/map-pin.png'}}
                     />                   
                 </MapView.Marker>
+                {/* <MapView.Marker
+                     title = {this.state.name1} 
+                     coordinate={{
+                        latitude:parseFloat(this.state.lat1),
+                        longitude:parseFloat(this.state.long1)
+                    }}
+                       
+                >    
+                    <Image 
+                        style={{width:24,height:24,resizeMode:'cover'}}
+                        source={{uri:'https://img.icons8.com/color/2x/marker.png'}}
+                    />                   
+                </MapView.Marker> */}
                 {this._renderMarekrs()}
-                
             </MapView>  
             
             <View style={{height:300,position:'absolute',zIndex:10,marginTop:430}}>

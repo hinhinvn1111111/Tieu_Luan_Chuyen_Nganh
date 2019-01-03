@@ -17,16 +17,20 @@ StatusBar.setHidden(true);
 import ParallaxScrollView from 'react-native-parallax-scroll-view';
 import {createStackNavigator} from 'react-navigation';
 const {w,h} = Dimensions.get('window');
-import {ChangeIDViewMap,ChangeIDViewMap2,AddComments,DeleteComments} from '../redux/dispatch';
+import {ChangeIDViewMap,ChangeIDViewMap2,AddComments,DeleteComments,DeleteBK,DeleteLocationFromDistance} from '../redux/dispatch';
 import {connect} from 'react-redux';
 import {ID,usn,pw,Avartar,ID_Role,Sex,Email} from './login';
 import Modal from 'react-native-modalbox';
+import {latSearch,longSearch,name} from './search';
+import getDirections from 'react-native-google-maps-directions'
 
 YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
 YellowBox.ignoreWarnings([
   'Warning: componentWillMount is deprecated',
   'Warning: componentWillReceiveProps is deprecated',
 ]);
+
+export var checkChiDuong = true;
 
 class ChiTietPlace extends Component {
 
@@ -39,7 +43,9 @@ class ChiTietPlace extends Component {
             key:1,
             arrCOMMENTS :[],
             content1:'',
-            refresh : false
+            refresh : false,
+            lat : '',
+            long : ''
         }
     }
 
@@ -63,6 +69,7 @@ class ChiTietPlace extends Component {
       }
       componentWillMount(){
         this.setState({idl:ID,idp:this.props.navigation.state.params.item.place.ID,arrCOMMENTS:this.props.arrComments});
+        this.setState({lat:this.props.navigation.state.params.item.place.Latitude,long:this.props.navigation.state.params.item.place.Longtitude})
       }
       componentDidMount(){
         this.setState({idl:ID,idp:this.props.navigation.state.params.item.place.ID,arrCOMMENTS:this.props.arrComments});
@@ -123,6 +130,32 @@ class ChiTietPlace extends Component {
         // this.setState({key:this.state.key+1});
     }
 
+    handleGetDirections = () => {
+
+        const data = {
+           source: {
+            latitude: latSearch,
+            longitude: longSearch
+          },
+          destination: {
+            latitude:parseFloat(this.props.navigation.state.params.item.place.Latitude),
+            longitude: parseFloat(this.props.navigation.state.params.item.place.Longtitude)
+          },
+          params: [
+            {
+              key: "travelmode",
+              value: "driving"        // may be "walking", "bicycling" or "transit" as well
+            },
+            {
+              key: "dir_action",
+              value: "navigate"       // this instantly initializes navigation using the given travel mode 
+            }
+          ]
+        }
+     
+        getDirections(data)
+      }
+
     render() {
         const { onScroll = () => {} } = this.props;
             return (
@@ -162,7 +195,7 @@ class ChiTietPlace extends Component {
 
                 renderStickyHeader={() => (
                 <View key="sticky-header" style={{justifyContent:'center',alignItems:'center',width:w,height:40,backgroundColor:'blue',flexDirection:'row'}}>
-                    <TouchableOpacity onPress={()=>this.props.navigation.navigate('screen1')}> 
+                    <TouchableOpacity onPress={()=>{this.props.navigation.navigate('screen1')}}> 
                         <Image 
                             style={{width:26,height:26}}
                             source={{uri:'https://img.icons8.com/color/2x/back.png'}}
@@ -182,14 +215,22 @@ class ChiTietPlace extends Component {
                 // )}/>
                 >
                     
-                    <View style={{width:w,backgroundColor:'blue', justifyContent:'center',alignItems:'center'}}>
+                    <View style={{width:w,backgroundColor:'blue', justifyContent:'center',alignItems:'center',padding:10}}>
                         <Text style={{fontSize:20,fontWeight:'bold',color:'#fff',marginTop:10}}>
                                 {this.props.navigation.state.params.item.place.Title}
                         </Text>
                         <Text style={{fontSize:13,color:'#00FFFF',marginTop:10,textAlign:'center'}}>
                                 {this.props.navigation.state.params.item.place.Decription}
                         </Text>
-                        <View style={{flex:1,flexDirection:'row',justifyContent:'center',alignItems:'center'}}>
+                        <View style={{flex:1,flexDirection:'row',justifyContent:'center',alignItems:'center',marginTop:10}}>
+
+                                <Image style={{width:30,height:30,resizeMode:'cover'}} 
+                                    source={{uri:'https://img.icons8.com/color/2x/signpost.png'}}
+                                />
+                                <TouchableOpacity onPress={this.handleGetDirections}>
+                                    <Text style={{fontSize:12,color:'red',fontWeight:'bold',marginRight:100}}>Chỉ đường</Text>
+                                </TouchableOpacity>
+
                                 <Image style={{width:30,height:30,resizeMode:'cover'}} 
                                     source={{uri:'https://img.icons8.com/color/2x/taxi.png'}}
                                 />
@@ -354,4 +395,4 @@ function mapStateToProps(state){
         arrComments : state.arrComments
     };
 }
-export default connect(mapStateToProps,{ChangeIDViewMap,ChangeIDViewMap2,AddComments,DeleteComments})(ChiTietPlace);
+export default connect(mapStateToProps,{ChangeIDViewMap,ChangeIDViewMap2,AddComments,DeleteComments,DeleteBK,DeleteLocationFromDistance})(ChiTietPlace);
